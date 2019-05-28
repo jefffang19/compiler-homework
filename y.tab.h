@@ -86,7 +86,8 @@ extern int yydebug;
     WHILE = 296,
     INTEGER = 297,
     REAL = 298,
-    ID = 299
+    ID = 299,
+    ARTH = 300
   };
 #endif
 /* Tokens.  */
@@ -132,6 +133,7 @@ extern int yydebug;
 #define INTEGER 297
 #define REAL 298
 #define ID 299
+#define ARTH 300
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -145,7 +147,7 @@ union YYSTYPE
 	int i;
 	char c;
 
-#line 149 "y.tab.h" /* yacc.c:1909  */
+#line 151 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

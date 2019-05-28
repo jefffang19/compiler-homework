@@ -30,7 +30,7 @@ comment "/*"[^*]*[*]+([^/][^*]*[*]+)*"/"|"//".*|"//".*[\r][\n]
 commenterr "/*"
 keyword boolean|break|byte|case|char|catch|class|const|continue|default|do|double|else|extends|false|final|finally|float|for|if|implements|int|long|main|new|print|private|protected|public|return|short|static|String|switch|this|true|try|void|while
 integer [+-]{0,1}[0-9]+
-real [+-]{0,1}[0-9]+\.[0-9]+("e+"[0-9]+)*|[+-]{0,1}[0-9]+E[+-]{0,1}[0-9]+
+real [+-]{0,1}[0-9]+\.[0-9]+("e"[+-]{0,1}[0-9]+){0,1}|[+-]{0,1}[0-9]+E[+-]{0,1}[0-9]+
 symbol [,:;\(\)\[\]\{\}]
 operator [+\-*/%=<>!]|"++"|"--"|<=|>=|==|!=|&&|"||"
 space [ \t]
@@ -63,6 +63,7 @@ ID [^,:;\(\)\[\]\{\}+\-*/%=<! \t\r\n]+
 	else if(str_eql(yytext,"-")) return('-');
 	else if(str_eql(yytext,"*")) return('*');
 	else if(str_eql(yytext,"%")) return('%');
+	else if(str_eql(yytext,"/")) return('/');
 	else if(str_eql(yytext,"=")) return('=');
 	else if(str_eql(yytext,"<")) return('<');
 	else if(str_eql(yytext,">")) return('>');
@@ -85,7 +86,7 @@ ID [^,:;\(\)\[\]\{\}+\-*/%=<! \t\r\n]+
 {real}			{
 	print_lineno();
 	charcnt+=yyleng;
-	yylval.i = atoi(yytext);	
+	yylval.d = atof(yytext);	
 	return(REAL);
 }
 {string}		{

@@ -5,10 +5,12 @@ static int a;
 int a=1;
 int a,b,c=10;
 int a=1,b,c=2;
-
-to be done
 float a=1.0+2.0;
 int a=1+2;
 int[] a = new int[10];
 int *a = new int[10];
+1.0+2.0 become 1.0 and +2.0
 int a[10] = {1,2,3}
+
+to be done
+zero_divisor (need more implement)
