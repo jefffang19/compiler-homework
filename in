@@ -1,0 +1,8 @@
+int b;
+static int a ;
+float c;
+boolean g;
+String str;
+static String ggg;
+int hh = 12 ;
+int hhh = 12, aaa = 52;
