@@ -6,3 +6,7 @@ String str;
 static String ggg;
 int hh = 12 ;
 int hhh = 12, aaa = 52;
+int ab = 23, abc = 23, abcd = 32;
+float gx = 23;
+int a,b, c=10;
+int a=1,b,c=2;
