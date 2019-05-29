@@ -40,7 +40,32 @@ method_declr: type ID '(' method_declr_parem ')' '{' compound '}' { /*function*/
 				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
 				sprintf($$,"%s %s %s(%s){\n%s\n}",$1,$2,$3,$5,$8);
 			}
-			| method_modifier type ID '(' method_declr_parem ')' ';' { /* function declaration */ }
+			| type ID '('  ')' '{' compound '}' { /*function*/
+				/* ps compound is things inside function(){ HERE } */
+				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
+				sprintf($$,"%s %s %s(){\n%s\n}",$1,$2,$6);
+			}
+			| method_modifier type ID '(' ')' '{' compound '}' { /*function*/
+				/* ps compound is things inside function(){ HERE } */
+				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
+				sprintf($$,"%s %s %s(){\n%s\n}",$1,$2,$3,$7);
+			}
+			| type ID '(' method_declr_parem ')' ';' { /* function declaration */
+				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
+				sprintf($$,"%s %s(%s) ;",$1,$2,$4);
+			}
+			| type ID '(' ')' ';' { /* function declaration */
+				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
+				sprintf($$,"%s %s() ;",$1,$2);
+			}
+			| method_modifier type ID '(' method_declr_parem ')' ';' { /* function declaration */
+				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
+				sprintf($$,"%s %s %s(%s) ;",$1,$2,$3,$5);
+			}
+			| method_modifier type ID '(' ')' ';' { /* function declaration */
+				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
+				sprintf($$,"%s %s %s() ;",$1,$2,$3);
+			}
 ;
 method_declr_parem : type ID {
 						$$ = (char*)malloc(sizeof(char)*returnDollarLEN);

@@ -32,4 +32,6 @@ int apple(int b){
 	float c=3.0;
 }
 private int banana(int b,float c){ int c; }
-
+int durian();
+protected int banana();
+private String elephant(){ int c; }

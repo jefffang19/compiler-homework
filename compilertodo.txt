@@ -9,18 +9,24 @@ float a=1.0+2.0;
 int a=1+2;
 int[] a = new int[10];
 int *a = new int[10];
-1.0+2.0 become 1.0 and +2.0
 int a[10] = {1,2,3}
+int a[] = {1,2,3};
 
 ---2.2---
 no method declaration in method (method = function)
 
 ---2.3---
 apple(a,banana(a));  <- not declare
-
+int apple(int b){
+	mylove();
+	int a,b=2;
+	float c=3.0;
+}
+private int banana(int b,float c){ int c; }
 ------------------------------------------------------------------------
 to be done:
 
+1.0+2.0 become 1.0 and +2.0
 zero_divisor (need more implement)
 final float pi = 3.14;
 
