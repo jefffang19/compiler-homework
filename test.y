@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <string.h>
 #define returnDollarLEN 100
-
 %}
 %union{
 	char* s;
@@ -31,10 +30,10 @@ declaration	: type identifier_list ';' {
 				sprintf($$,"static %s %s ;",$2,$3);
 			}
 ;
-method_declr: method_modifier type ID '(' method_declr_parem ')' '{' compound '}' { /*function*/
+method_declr: type ID '(' method_declr_parem ')' '{' compound '}' { /*function*/
 				/* ps compound is things inside function(){ HERE } */
 				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
-				/*sprintf($$,"%s %s %s(%s){\n%s\n}",$1,$2,$4,$7);*/
+				sprintf($$,"%s %s(%s){\n%s\n}",$1,$2,$4,$7);
 			}
 			| method_modifier type ID '(' method_declr_parem ')' ';' { /* function declaration */ }
 ;
@@ -54,25 +53,24 @@ method_modifier	: PRIVATE { $$ = $1; }
 				| PUBLIC { $$ = $1; }
 				| { /*empty*/ }
 ;
-identifier_list : identifier_list ID { $$ = $2; }
-				| identifier_list ID init {
+identifier_list : ID { $$ = $1; }
+				| ID init {
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
-					sprintf($$,"%s %s",$2,$3);
+					sprintf($$,"%s %s",$1,$2);
 				}
-				| identifier_list ID init ',' identifier_list {
+				| ID init ',' identifier_list {
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
-					sprintf($$,"%s %s, %s",$2,$3,$5);
+					sprintf($$,"%s %s, %s",$1,$2,$4);
 				}
-				| identifier_list ID ',' identifier_list {
+				| ID ',' identifier_list {
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
-					sprintf($$,"%s, %s",$2,$4);
+					sprintf($$,"%s, %s",$1,$3);
 				}
-				| identifier_list arrinit { $$ = $2; }
-				| identifier_list arrinit ',' identifier_list {
+				| arrinit { $$ = $1; }
+				| arrinit ',' identifier_list {
 					$$ = (char*)malloc(sizeof(char)*8*returnDollarLEN);
-					sprintf($$,"%s, %s",$2,$4);
+					sprintf($$,"%s, %s",$1,$3);
 				}
-				| {/*do nothing*/}
 ;	
 init			: '=' expr { 
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);					
@@ -145,15 +143,22 @@ arth			: '+' { $$ = "+"; }
 				| '/' { $$ = "/"; }
 				| '%' { $$ = '%'; }
 ;
-compound		: declaration compound {
+compound		: declaration {
 					$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
-					sprintf($$,"%s ;\n%s",$1,$2);
+					sprintf($$,"\t%s",$1);
+				}
+				| function ';' {
+					$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
+					sprintf($$,"\t%s ;",$1);
+				}
+				| declaration compound {
+					$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
+					sprintf($$,"\t%s\n%s",$1,$2);
 				}
 				| function ';' compound {
 					$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
-					sprintf($$,"%s ;\n%s",$1,$3);
+					sprintf($$,"\t%s ;\n%s",$1,$3);
 				}
-				| { /*empty*/ }
 ;
 function		: ID '(' ')' {
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
