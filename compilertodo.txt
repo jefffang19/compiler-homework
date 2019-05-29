@@ -1,5 +1,5 @@
----2.1---
 finished:
+---2.1---
 int a;
 static int a;
 int a=1;
@@ -12,6 +12,67 @@ int *a = new int[10];
 1.0+2.0 become 1.0 and +2.0
 int a[10] = {1,2,3}
 
-to be done
+---2.2---
+no method declaration in method (method = function)
+
+---2.3---
+apple(a,banana(a));  <- not declare
+
+------------------------------------------------------------------------
+to be done:
+
 zero_divisor (need more implement)
 final float pi = 3.14;
+
+class Point{
+	static int counter;
+	int x, y;
+	void clear(){
+		x = 0;
+		y = 0;
+	}
+}
+Point Left = new Point();
+
+void clear();
+...
+int clear(){
+	method;
+	return 0;
+}
+int clear(int x,y=2){     <== overloading
+	method;
+	return x;
+}
+
+
+method_modifier type identifier({zero or more formal arguments})
+method_modifier ->
+	public | protected | private
+for example:
+boolean func1(int x, int y, String z) {}
+String func2(boolean a) {}
+void func3() {}
+
+
+statements：compound, simple, conditional, loop, return, and method call
+compound
+{
+    {zero or more variable and constant declaration}
+    {zero or more statements}
+    /*for example*/
+    int a ;
+	read(a) ;
+	print(a) ;
+}
+compound statement 內宣告的 variables 和 constants 有區域性
+
+
+ID determine variable or function
+
+can you declare?
+void func(int a[]=[0,1,2,3]);
+void func(int a, b, float c);
+
+method_declr_parem  and  declaration  priority problem
+

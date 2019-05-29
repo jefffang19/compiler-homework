@@ -1,3 +1,5 @@
+
+/* this is comment */
 int b;
 static int a ;
 float c;
@@ -19,3 +21,13 @@ int a[10];
 int a[10] = {1,2,3};
 int a[] = {1,2,3};
 int a = 1/0;
+apple();
+apple(a);
+apple(a,b);
+apple(a,banana(a));
+
+int apple(int b){
+	/*mylove();
+	int a,b=2;*/
+}
+
