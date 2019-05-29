@@ -27,7 +27,9 @@ apple(a,b);
 apple(a,banana(a));
 
 int apple(int b){
-	/*mylove();
-	int a,b=2;*/
+	mylove();
+	int a,b=2;
+	float c=3.0;
 }
+private int banana(int b,float c){ int c; }
 
