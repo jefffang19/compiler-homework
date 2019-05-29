@@ -1093,7 +1093,7 @@ YY_RULE_SETUP
 	print_lineno();
 	charcnt+=yyleng;
 	yylval.s = (char*)malloc(sizeof(char)*yyleng);
-	strcpy(yylval.s,yytext);	
+	strcpy(yylval.s,yytext);
 	return(ID);
 }
 	YY_BREAK

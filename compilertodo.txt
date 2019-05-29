@@ -34,7 +34,7 @@ class Point{
 }
 Point Left = new Point();
 
-void clear();
+int clear();
 ...
 int clear(){
 	method;

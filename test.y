@@ -35,6 +35,11 @@ method_declr: type ID '(' method_declr_parem ')' '{' compound '}' { /*function*/
 				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
 				sprintf($$,"%s %s(%s){\n%s\n}",$1,$2,$4,$7);
 			}
+			| method_modifier type ID '(' method_declr_parem ')' '{' compound '}' { /*function*/
+				/* ps compound is things inside function(){ HERE } */
+				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
+				sprintf($$,"%s %s %s(%s){\n%s\n}",$1,$2,$3,$5,$8);
+			}
 			| method_modifier type ID '(' method_declr_parem ')' ';' { /* function declaration */ }
 ;
 method_declr_parem : type ID {
@@ -51,7 +56,6 @@ type		: BOOLEAN {$$ = $1;} | CHAR {$$ = $1;} | INT {$$ = $1; } | FLOAT {$$ = $1;
 method_modifier	: PRIVATE { $$ = $1; }
 				| PROTECTED { $$ = $1; }
 				| PUBLIC { $$ = $1; }
-				| { /*empty*/ }
 ;
 identifier_list : ID { $$ = $1; }
 				| ID init {

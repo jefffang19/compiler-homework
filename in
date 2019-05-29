@@ -31,4 +31,5 @@ int apple(int b){
 	int a,b=2;
 	float c=3.0;
 }
+private int banana(int b,float c){ int c; }
 
