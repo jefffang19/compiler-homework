@@ -30,41 +30,50 @@ declaration	: type identifier_list ';' {
 				sprintf($$,"static %s %s ;",$2,$3);
 			}
 ;
-method_declr: type ID '(' method_declr_parem ')' '{' compound '}' { /*function*/
+method_declr: method_modifier type ID '(' method_declr_parem ')' '{' compound '}' { /*function*/
 				/* ps compound is things inside function(){ HERE } */
 				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
-				sprintf($$,"%s %s(%s){\n%s\n}",$1,$2,$4,$7);
-			}
-			| method_modifier type ID '(' method_declr_parem ')' '{' compound '}' { /*function*/
-				/* ps compound is things inside function(){ HERE } */
-				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
-				sprintf($$,"%s %s %s(%s){\n%s\n}",$1,$2,$3,$5,$8);
-			}
-			| type ID '('  ')' '{' compound '}' { /*function*/
-				/* ps compound is things inside function(){ HERE } */
-				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
-				sprintf($$,"%s %s %s(){\n%s\n}",$1,$2,$6);
-			}
-			| method_modifier type ID '(' ')' '{' compound '}' { /*function*/
-				/* ps compound is things inside function(){ HERE } */
-				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
-				sprintf($$,"%s %s %s(){\n%s\n}",$1,$2,$3,$7);
-			}
-			| type ID '(' method_declr_parem ')' ';' { /* function declaration */
-				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
-				sprintf($$,"%s %s(%s) ;",$1,$2,$4);
-			}
-			| type ID '(' ')' ';' { /* function declaration */
-				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
-				sprintf($$,"%s %s() ;",$1,$2);
+				if(strcmp($1,"/*empty*/")==0 && strcmp($5,"/*empty*/")==0 && strcmp($8,"/*empty*/")==0){
+					/* int a(){} */
+					fprintf(stderr,"Warning: function body in declaration is empty\n");
+					sprintf($$,"%s %s(){ }",$2,$3);
+				}
+				else if(strcmp($1,"/*empty*/")==0 && strcmp($5,"/*empty*/")==0)
+					/* int a(){a;} */
+					sprintf($$,"%s %s(){\n%s\n}",$2,$3,$8);
+				else if(strcmp($1,"/*empty*/")==0 && strcmp($8,"/*empty*/")==0){
+					/* int a(int b){} */
+					fprintf(stderr,"Warning: function body in declaration is empty\n");
+					sprintf($$,"%s %s(%s){ }",$2,$3,$5);
+				}
+				else if(strcmp($5,"/*empty*/")==0 && strcmp($8,"/*empty*/")==0){
+					/* private int a(){} */
+					fprintf(stderr,"Warning: function body in declaration is empty\n");
+					sprintf($$,"%s %s %s(){ }",$1,$2,$3);
+				}
+				else if(strcmp($1,"/*empty*/")==0)
+					/* int a(int b){a;} */
+					sprintf($$,"%s %s(%s){\n%s\n}",$2,$3,$5,$8);
+				else if(strcmp($5,"/*empty*/")==0)
+					/* private int a(){a;} */
+					sprintf($$,"%s %s %s(){\n%s\n}",$1,$2,$3,$8);
+				else if(strcmp($8,"/*empty*/")==0){
+					/* private int a(int b){} */
+					fprintf(stderr,"Warning: function body in declaration is empty\n");
+					sprintf($$,"%s %s %s(%s){ }",$1,$2,$3,$5);
+				}
+				else /* privite int a(int b){ b; } */
+					sprintf($$,"%s %s %s(%s){\n%s\n}",$1,$2,$3,$5,$8);
 			}
 			| method_modifier type ID '(' method_declr_parem ')' ';' { /* function declaration */
 				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
-				sprintf($$,"%s %s %s(%s) ;",$1,$2,$3,$5);
-			}
-			| method_modifier type ID '(' ')' ';' { /* function declaration */
-				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
-				sprintf($$,"%s %s %s() ;",$1,$2,$3);
+				if(strcmp($1,"/*empty*/")==0 && strcmp($5,"/*empty*/")==0) /* int a(); */
+					sprintf($$,"%s %s() ;",$2,$3);
+				else if(strcmp($1,"/*empty*/")==0) /* int a(int b); */
+					sprintf($$,"%s %s(%s) ;",$2,$3,$5);
+				else if(strcmp($5,"/*empty*/")==0) /* private int a(); */
+					sprintf($$,"%s %s %s() ;",$1,$2,$3);
+				else sprintf($$,"%s %s %s(%s) ;",$1,$2,$3,$5); /*private int a(int b);*/
 			}
 ;
 method_declr_parem : type ID {
@@ -75,12 +84,14 @@ method_declr_parem : type ID {
 						$$ = (char*)malloc(sizeof(char)*2*returnDollarLEN);
 						sprintf($$,"%s %s, %s",$1,$2,$4);
 					}
+					| { $$ = "/*empty*/"; }
 ;
 type		: BOOLEAN {$$ = $1;} | CHAR {$$ = $1;} | INT {$$ = $1; } | FLOAT {$$ = $1;} | STRING {$$ = $1;}
 ;
 method_modifier	: PRIVATE { $$ = $1; }
 				| PROTECTED { $$ = $1; }
 				| PUBLIC { $$ = $1; }
+				| { $$ = "/*empty*/"; }
 ;
 identifier_list : ID { $$ = $1; }
 				| ID init {
