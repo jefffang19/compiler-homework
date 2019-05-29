@@ -31,7 +31,7 @@ declaration	: type identifier_list ';' {
 				sprintf($$,"static %s %s ;",$2,$3);
 			}
 ;
-method_declr: method_modifier type ID '(' method_declr_parem ')' '{' compound '}' { /*function*/
+method_declr: type ID '(' method_declr_parem ')' '{' compound '}' { /*function*/
 				/* ps compound is things inside function(){ HERE } */
 				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
 				/*sprintf($$,"%s %s %s(%s){\n%s\n}",$1,$2,$4,$7);*/
