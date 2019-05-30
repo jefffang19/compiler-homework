@@ -7,21 +7,21 @@
 	char* s;
 	float d;
 	int i;
-	char c;
 }
 /* keywords */
 %token BOOLEAN BREAK BYTE CASE CHAR CATCH CLASS CONST CONTINUE DEFAULT DO DOUBLE ELSE EXTENDS FALSE2 FINAL FINALLY FLOAT FOR IF IMPLEMENTS INT LONG MAIN NEW PRINT PRIVATE PROTECTED PUBLIC RETURN SHORT STATIC STRING SWITCH THIS TRUE2 TRY VOID WHILE
-%token INTEGER REAL ID
-%type<s> BOOLEAN BREAK BYTE CASE CHAR CATCH CLASS CONST CONTINUE DEFAULT DO DOUBLE ELSE EXTENDS FALSE2 FINAL FINALLY FLOAT FOR IF IMPLEMENTS INT LONG MAIN NEW PRINT PRIVATE PROTECTED PUBLIC RETURN SHORT STATIC STRING SWITCH THIS TRUE2 TRY VOID WHILE ID type identifier_list assign expr arrinit arrinit_expr arth method_modifier method_declr compound function func_parem declaration method_declr_parem class_declr class_body use_var
+%token INTEGER REAL ID PPLUS MMINUS SEQUAL BEQUAL EQUAL NEQUAL AND OR
+%type<s> BOOLEAN BREAK BYTE CASE CHAR CATCH CLASS CONST CONTINUE DEFAULT DO DOUBLE ELSE EXTENDS FALSE2 FINAL FINALLY FLOAT FOR IF IMPLEMENTS INT LONG MAIN NEW PRINT PRIVATE PROTECTED PUBLIC RETURN SHORT STATIC STRING SWITCH THIS TRUE2 TRY VOID WHILE ID type identifier_list assign expr arrinit arrinit_expr method_modifier method_declr compound function func_parem declaration method_declr_parem class_declr class_body use_var PPLUS MMINUS SEQUAL BEQUAL EQUAL NEQUAL AND OR prefixOp postfixOp const_expr term factor
 %type<i> INTEGER
 %type<d> REAL
 %%
 readin		: { /*empty*/ }
 			| readin declaration { printf("%s",$2); }
 			| readin method_declr { printf("%s",$2); }
-			| readin function ';' { printf("%s ;",$2); }
 			| readin class_declr { printf("%s",$2); }
-			| readin use_var ';' { printf("%s ;",$2); }
+			| readin use_var ';' { /* this include calling function*/
+				printf("%s ;",$2);
+			}
 ;
 declaration	: type identifier_list ';' {
 				$$ = (char*)malloc(sizeof(char)*3*returnDollarLEN);				
@@ -128,9 +128,8 @@ use_var			: ID assign	{
 					$$ = (char*)malloc(sizeof(char)*2*returnDollarLEN);
 					sprintf($$,"%s %s",$1,$2);
 				}
-				| ID arth expr {
-					$$ = (char*)malloc(sizeof(char)*2*returnDollarLEN);
-					sprintf($$,"%s %s %s",$1,$2,$3);
+				| expr {
+					$$ = $1;
 				}
 ;
 method_modifier	: PRIVATE { $$ = $1; }
@@ -200,40 +199,109 @@ arrinit_expr	: expr { $$ = $1; }
 					sprintf($$,"%s,%s",$1,$3);
 				}
 ;
-expr			: INTEGER {
+expr			: term { $$ = $1;}
+				| expr '+' term {
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"%s + %s",$1,$3);
+				}
+				| expr '-' term {
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"%s - %s",$1,$3);
+				}
+;
+term			: factor { $$ = $1; }
+				| factor '*' factor {
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"%s * %s",$1,$3);
+				}
+				| factor '/' factor {
+					/*zero divisor*/
+					if($3[0]=='0') printf("zero divisor\n");
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"%s / %s",$1,$3);
+				}
+				| factor '%' factor {
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"%s \% %s",$1,$3);
+				}
+;
+factor			: ID { $$ = $1; }
+				| const_expr { $$ = $1;}
+				| '(' expr ')' {
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"(%s)",$2);
+				}
+				| prefixOp {
+					$$ = $1;
+				}
+				| postfixOp {
+					$$ = $1;
+				}
+				| function { $$ = $1; }
+;
+prefixOp		: PPLUS ID {
+					/* need implement ID = function or variable */
+					/* if ID is variable */
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"++%s",$2);
+					/* if ID is function */
+					/*fprintf(stderr,"function name doesn't support ++ operator\n");*/
+				}
+				| MMINUS ID {
+					/* need implement ID = function or variable */
+					/* if ID is variable */
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"--%s",$2);
+					/* if ID is function */
+					/*fprintf(stderr,"function name doesn't support -- operator\n");*/
+				}
+				| '+' ID {
+					/* need implement ID = function or variable */
+					/* if ID is variable */
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"+%s",$2);
+					/* if ID is function */
+					/*fprintf(stderr,"function name doesn't support -- operator\n");*/
+				}
+				| '-' ID {
+					/* need implement ID = function or variable */
+					/* if ID is variable */
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"-%s",$2); printf("debug %s",$$);
+					/* if ID is function */
+					/*fprintf(stderr,"function name doesn't support -- operator\n");*/
+				}
+;
+postfixOp		: ID PPLUS {
+					/* need implement ID = function or variable */
+					/* if ID is variable */
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"%s++",$1);
+					/* if ID is function */
+					/*fprintf(stderr,"function name doesn't support ++ operator\n");*/
+				}
+				| ID MMINUS {
+					/* need implement ID = function or variable */
+					/* if ID is variable */
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"%s--",$1);
+					/* if ID is function */
+					/*fprintf(stderr,"function name doesn't support -- operator\n");*/
+				}
+;
+
+const_expr		: INTEGER {
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);					
-					sprintf($$,"%d",$1);
+					sprintf($$,"%d",$1); 
 				}
 				| REAL {
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);					
 					sprintf($$,"%g",$1);
 				}
-				| INTEGER arth expr {
-					/*zero divisor*/
-					if($2[0]=='/' && $3[0]=='0') printf("zero divisor\n");
-					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
-					sprintf($$,"%d %s %s",$1,$2,$3);
-				}
-				| REAL arth expr {
-					/*zero divisor*/
-					if($2[0]=='/' && $3[0]=='0') printf("zero divisor\n");
-					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
-					sprintf($$,"%g %s %s",$1,$2,$3);
-				}
-;
-arth			: '+' { $$ = "+"; }
-				| '-' { $$ = "-"; }
-				| '*' { $$ = "*"; }
-				| '/' { $$ = "/"; }
-				| '%' { $$ = '%'; }
 ;
 compound		: declaration {
 					$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
 					sprintf($$,"%s",$1);
-				}
-				| function ';' {
-					$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
-					sprintf($$,"%s ;",$1);
 				}
 				| use_var ';' {
 					$$ = (char*)malloc(sizeof(char)*5*returnDollarLEN);
@@ -242,10 +310,6 @@ compound		: declaration {
 				| declaration compound {
 					$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
 					sprintf($$,"%s\n%s",$1,$2);
-				}
-				| function ';' compound {
-					$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
-					sprintf($$,"%s ;\n%s",$1,$3);
 				}
 				| use_var ';' compound {
 					$$ = (char*)malloc(sizeof(char)*5*returnDollarLEN);

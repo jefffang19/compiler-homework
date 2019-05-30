@@ -86,7 +86,15 @@ extern int yydebug;
     WHILE = 296,
     INTEGER = 297,
     REAL = 298,
-    ID = 299
+    ID = 299,
+    PPLUS = 300,
+    MMINUS = 301,
+    SEQUAL = 302,
+    BEQUAL = 303,
+    EQUAL = 304,
+    NEQUAL = 305,
+    AND = 306,
+    OR = 307
   };
 #endif
 /* Tokens.  */
@@ -132,6 +140,14 @@ extern int yydebug;
 #define INTEGER 297
 #define REAL 298
 #define ID 299
+#define PPLUS 300
+#define MMINUS 301
+#define SEQUAL 302
+#define BEQUAL 303
+#define EQUAL 304
+#define NEQUAL 305
+#define AND 306
+#define OR 307
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -143,9 +159,8 @@ union YYSTYPE
 	char* s;
 	float d;
 	int i;
-	char c;
 
-#line 149 "y.tab.h" /* yacc.c:1909  */
+#line 164 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
