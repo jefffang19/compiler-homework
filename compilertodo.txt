@@ -84,3 +84,8 @@ void func(int a, b, float c);
 
 method_declr_parem  and  declaration  priority problem
 
+
+use_variable
+a = 1;
+a + 1
+b++

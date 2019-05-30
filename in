@@ -36,3 +36,19 @@ int durian();
 protected int banana();
 private String elephant(){ int c; }
 String gg(int b){}
+
+x = 0;
+x = 1 + 1;
+x + 1;
+void clear() {
+		x = 0;
+		y = 0;
+}	
+class Point {
+	static int counter ;
+	int x, y;
+	void clear() {
+		x = 0;
+		y = 0;
+	}
+}

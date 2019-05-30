@@ -12,7 +12,7 @@
 /* keywords */
 %token BOOLEAN BREAK BYTE CASE CHAR CATCH CLASS CONST CONTINUE DEFAULT DO DOUBLE ELSE EXTENDS FALSE2 FINAL FINALLY FLOAT FOR IF IMPLEMENTS INT LONG MAIN NEW PRINT PRIVATE PROTECTED PUBLIC RETURN SHORT STATIC STRING SWITCH THIS TRUE2 TRY VOID WHILE
 %token INTEGER REAL ID
-%type<s> BOOLEAN BREAK BYTE CASE CHAR CATCH CLASS CONST CONTINUE DEFAULT DO DOUBLE ELSE EXTENDS FALSE2 FINAL FINALLY FLOAT FOR IF IMPLEMENTS INT LONG MAIN NEW PRINT PRIVATE PROTECTED PUBLIC RETURN SHORT STATIC STRING SWITCH THIS TRUE2 TRY VOID WHILE ID type identifier_list init expr arrinit arrinit_expr arth method_modifier method_declr compound function func_parem declaration method_declr_parem
+%type<s> BOOLEAN BREAK BYTE CASE CHAR CATCH CLASS CONST CONTINUE DEFAULT DO DOUBLE ELSE EXTENDS FALSE2 FINAL FINALLY FLOAT FOR IF IMPLEMENTS INT LONG MAIN NEW PRINT PRIVATE PROTECTED PUBLIC RETURN SHORT STATIC STRING SWITCH THIS TRUE2 TRY VOID WHILE ID type identifier_list assign expr arrinit arrinit_expr arth method_modifier method_declr compound function func_parem declaration method_declr_parem class_declr class_body use_var
 %type<i> INTEGER
 %type<d> REAL
 %%
@@ -20,6 +20,8 @@ readin		: { /*empty*/ }
 			| readin declaration { printf("%s",$2); }
 			| readin method_declr { printf("%s",$2); }
 			| readin function ';' { printf("%s ;",$2); }
+			| readin class_declr { printf("%s",$2); }
+			| readin use_var ';' { printf("%s ;",$2); }
 ;
 declaration	: type identifier_list ';' {
 				$$ = (char*)malloc(sizeof(char)*3*returnDollarLEN);				
@@ -28,6 +30,26 @@ declaration	: type identifier_list ';' {
 			| STATIC type identifier_list ';' {
 				$$ = (char*)malloc(sizeof(char)*3*returnDollarLEN);	
 				sprintf($$,"static %s %s ;",$2,$3);
+			}
+;
+class_declr	: CLASS ID '{' class_body '}' {
+				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);	
+				sprintf($$,"%s %s {\n%s\n}",$1,$2,$4);
+			}
+;
+class_body	: declaration {
+				$$ = $1;
+			}
+			| method_declr {
+				$$ = $1;
+			}
+			| declaration class_body {
+				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);	
+				sprintf($$,"%s\n%s",$1,$2);
+			}
+			| method_declr class_body {
+				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);	
+				sprintf($$,"%s\n%s",$1,$2);
 			}
 ;
 method_declr: type ID '(' method_declr_parem ')' '{' compound '}' { /*function*/
@@ -99,23 +121,28 @@ method_declr_parem : type ID {
 						$$ = (char*)malloc(sizeof(char)*2*returnDollarLEN);
 						sprintf($$,"%s %s, %s",$1,$2,$4);
 					}
-					| type ID {
-						$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
-						sprintf($$,"%s %s",$1,$2);
-					}
 ;
-type		: BOOLEAN {$$ = $1;} | CHAR {$$ = $1;} | INT {$$ = $1; } | FLOAT {$$ = $1;} | STRING {$$ = $1;}
+type		: BOOLEAN {$$ = $1;} | CHAR {$$ = $1;} | INT {$$ = $1; } | FLOAT {$$ = $1;} | STRING {$$ = $1;} | VOID { $$ = $1; }
+;
+use_var			: ID assign	{
+					$$ = (char*)malloc(sizeof(char)*2*returnDollarLEN);
+					sprintf($$,"%s %s",$1,$2);
+				}
+				| ID arth expr {
+					$$ = (char*)malloc(sizeof(char)*2*returnDollarLEN);
+					sprintf($$,"%s %s %s",$1,$2,$3);
+				}
 ;
 method_modifier	: PRIVATE { $$ = $1; }
 				| PROTECTED { $$ = $1; }
 				| PUBLIC { $$ = $1; }
 ;
 identifier_list : ID { $$ = $1; }
-				| ID init {
+				| ID assign {
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
 					sprintf($$,"%s %s",$1,$2);
 				}
-				| ID init ',' identifier_list {
+				| ID assign ',' identifier_list {
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
 					sprintf($$,"%s %s, %s",$1,$2,$4);
 				}
@@ -129,7 +156,7 @@ identifier_list : ID { $$ = $1; }
 					sprintf($$,"%s, %s",$1,$3);
 				}
 ;	
-init			: '=' expr { 
+assign			: '=' expr { 
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);					
 					sprintf($$,"= %s",$2);
 				}
@@ -202,19 +229,27 @@ arth			: '+' { $$ = "+"; }
 ;
 compound		: declaration {
 					$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
-					sprintf($$,"\t%s",$1);
+					sprintf($$,"%s",$1);
 				}
 				| function ';' {
 					$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
-					sprintf($$,"\t%s ;",$1);
+					sprintf($$,"%s ;",$1);
+				}
+				| use_var ';' {
+					$$ = (char*)malloc(sizeof(char)*5*returnDollarLEN);
+					sprintf($$,"%s ;",$1);
 				}
 				| declaration compound {
 					$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
-					sprintf($$,"\t%s\n%s",$1,$2);
+					sprintf($$,"%s\n%s",$1,$2);
 				}
 				| function ';' compound {
 					$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
-					sprintf($$,"\t%s ;\n%s",$1,$3);
+					sprintf($$,"%s ;\n%s",$1,$3);
+				}
+				| use_var ';' compound {
+					$$ = (char*)malloc(sizeof(char)*5*returnDollarLEN);
+					sprintf($$,"%s ;\n%s",$1,$3);
 				}
 ;
 function		: ID '(' ')' {
