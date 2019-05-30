@@ -28,14 +28,14 @@ int str_eql(char const * str1, char const * str2){
 eol \r|\r\n|\n
 comment "/*"[^*]*[*]+([^/][^*]*[*]+)*"/"|"//".*|"//".*[\r][\n]
 commenterr "/*"
-keyword boolean|break|byte|case|char|catch|class|const|continue|default|do|double|else|extends|false|final|finally|float|for|if|implements|int|long|main|new|print|private|protected|public|return|short|static|String|switch|this|true|try|void|while
-symbol [,:;\(\)\[\]\{\}]
+keyword boolean|break|byte|case|char|catch|class|const|continue|default|do|double|else|extends|false|final|finally|float|for|if|implements|int|long|main|new|print|private|protected|public|return|short|static|String|switch|this|true|try|void|while|read
+symbol [.,:;\(\)\[\]\{\}]
 operator [+\-*/%=<>!]|"++"|"--"|<=|>=|==|!=|&&|"||"
 integer [0-9]+
 real [0-9]+\.[0-9]+("e"[+-]{0,1}[0-9]+){0,1}|[0-9]+E[+-]{0,1}[0-9]+
 space [ \t]
 string \"(\\.|[^\n"\\])*\"
-ID [^,:;\(\)\[\]\{\}+\-*/%=<! \t\r\n]+
+ID [^.,:;\(\)\[\]\{\}+\-*/%=<! \t\r\n]+
 %%
 {comment}		{ /*do nothing*/ }
 {commenterr}	{ fprintf(stderr,"Line:%d, 1st char: %d, error! c-type comment \"*/\" not matched!\n",yylineno, charcnt+1); return 0;}
@@ -43,6 +43,7 @@ ID [^,:;\(\)\[\]\{\}+\-*/%=<! \t\r\n]+
 	print_lineno();
 	charcnt+=yyleng;
 	switch(yytext[0]){
+		case '.': return('.');
 		case ',': return(',');
 		case ':': return(':');
 		case ';': return(';');
@@ -145,6 +146,7 @@ ID [^,:;\(\)\[\]\{\}+\-*/%=<! \t\r\n]+
 	else if(str_eql(yytext,"try")) return(TRY);
 	else if(str_eql(yytext,"void")) return(VOID);
 	else if(str_eql(yytext,"while")) return(WHILE);
+	else if(str_eql(yytext,"read")) return(READ);
 }
 {ID}			{
 	print_lineno();

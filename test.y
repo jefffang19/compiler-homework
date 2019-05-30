@@ -9,19 +9,18 @@
 	int i;
 }
 /* keywords */
-%token BOOLEAN BREAK BYTE CASE CHAR CATCH CLASS CONST CONTINUE DEFAULT DO DOUBLE ELSE EXTENDS FALSE2 FINAL FINALLY FLOAT FOR IF IMPLEMENTS INT LONG MAIN NEW PRINT PRIVATE PROTECTED PUBLIC RETURN SHORT STATIC STRING SWITCH THIS TRUE2 TRY VOID WHILE
-%token INTEGER REAL ID PPLUS MMINUS SEQUAL BEQUAL EQUAL NEQUAL AND OR
-%type<s> BOOLEAN BREAK BYTE CASE CHAR CATCH CLASS CONST CONTINUE DEFAULT DO DOUBLE ELSE EXTENDS FALSE2 FINAL FINALLY FLOAT FOR IF IMPLEMENTS INT LONG MAIN NEW PRINT PRIVATE PROTECTED PUBLIC RETURN SHORT STATIC STRING SWITCH THIS TRUE2 TRY VOID WHILE ID type identifier_list assign expr arrinit arrinit_expr method_modifier method_declr compound function func_parem declaration method_declr_parem class_declr class_body use_var PPLUS MMINUS SEQUAL BEQUAL EQUAL NEQUAL AND OR prefixOp postfixOp const_expr term factor
+%token BOOLEAN BREAK BYTE CASE CHAR CATCH CLASS CONST CONTINUE DEFAULT DO DOUBLE ELSE EXTENDS FALSE2 FINAL FINALLY FLOAT FOR IF IMPLEMENTS INT LONG MAIN NEW PRINT PRIVATE PROTECTED PUBLIC RETURN SHORT STATIC STRING SWITCH THIS TRUE2 TRY VOID WHILE READ
+%token INTEGER REAL ID PPLUS MMINUS SEQUAL BEQUAL EQUAL NEQUAL AND OR 
+%type<s> BOOLEAN BREAK BYTE CASE CHAR CATCH CLASS CONST CONTINUE DEFAULT DO DOUBLE ELSE EXTENDS FALSE2 FINAL FINALLY FLOAT FOR IF IMPLEMENTS INT LONG MAIN NEW PRINT PRIVATE PROTECTED PUBLIC RETURN SHORT STATIC STRING SWITCH THIS TRUE2 TRY VOID WHILE ID type identifier_list assign expr arrinit arrinit_expr method_modifier method_declr compound function func_parem declaration method_declr_parem class_declr class_body simple PPLUS MMINUS SEQUAL BEQUAL EQUAL NEQUAL AND OR prefixOp postfixOp const_expr term factor name READ boolean_expr conditional
 %type<i> INTEGER
 %type<d> REAL
 %%
-readin		: { /*empty*/ }
-			| readin declaration { printf("%s",$2); }
+readin		: readin declaration { printf("%s",$2); }
 			| readin method_declr { printf("%s",$2); }
 			| readin class_declr { printf("%s",$2); }
-			| readin use_var ';' { /* this include calling function*/
-				printf("%s ;",$2);
-			}
+			| readin simple { printf("%s",$2); }
+			| readin conditional { printf("%s",$2); }
+			| { /*empty*/ }
 ;
 declaration	: type identifier_list ';' {
 				$$ = (char*)malloc(sizeof(char)*3*returnDollarLEN);				
@@ -122,39 +121,10 @@ method_declr_parem : type ID {
 						sprintf($$,"%s %s, %s",$1,$2,$4);
 					}
 ;
-type		: BOOLEAN {$$ = $1;} | CHAR {$$ = $1;} | INT {$$ = $1; } | FLOAT {$$ = $1;} | STRING {$$ = $1;} | VOID { $$ = $1; }
-;
-use_var			: ID assign	{
-					$$ = (char*)malloc(sizeof(char)*2*returnDollarLEN);
-					sprintf($$,"%s %s",$1,$2);
-				}
-				| expr {
-					$$ = $1;
-				}
-;
 method_modifier	: PRIVATE { $$ = $1; }
 				| PROTECTED { $$ = $1; }
 				| PUBLIC { $$ = $1; }
 ;
-identifier_list : ID { $$ = $1; }
-				| ID assign {
-					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
-					sprintf($$,"%s %s",$1,$2);
-				}
-				| ID assign ',' identifier_list {
-					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
-					sprintf($$,"%s %s, %s",$1,$2,$4);
-				}
-				| ID ',' identifier_list {
-					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
-					sprintf($$,"%s, %s",$1,$3);
-				}
-				| arrinit { $$ = $1; }
-				| arrinit ',' identifier_list {
-					$$ = (char*)malloc(sizeof(char)*8*returnDollarLEN);
-					sprintf($$,"%s, %s",$1,$3);
-				}
-;	
 assign			: '=' expr { 
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);					
 					sprintf($$,"= %s",$2);
@@ -199,6 +169,86 @@ arrinit_expr	: expr { $$ = $1; }
 					sprintf($$,"%s,%s",$1,$3);
 				}
 ;
+conditional		: IF '(' boolean_expr ')' simple {
+					$$ = (char*)malloc(sizeof(char)*2*returnDollarLEN);					
+					sprintf($$,"%s(%s) %s",$1,$3,$5);
+				}
+				| IF '(' boolean_expr ')' '{' compound '}' {
+					$$ = (char*)malloc(sizeof(char)*5*returnDollarLEN);					
+					sprintf($$,"%s(%s) {\n%s\n}",$1,$3,$6);
+				}
+				| IF '(' boolean_expr ')' simple ELSE simple {
+					$$ = (char*)malloc(sizeof(char)*2*returnDollarLEN);					
+					sprintf($$,"%s(%s) %s\n%s %s",$1,$3,$5,$6,$7);
+				}
+				| IF '(' boolean_expr ')' simple ELSE '{' compound '}' {
+					$$ = (char*)malloc(sizeof(char)*10*returnDollarLEN);					
+					sprintf($$,"%s(%s) %s\n%s {\n%s\n}",$1,$3,$5,$6,$8);
+				}
+				| IF '(' boolean_expr ')' '{' compound '}' ELSE simple {
+					$$ = (char*)malloc(sizeof(char)*10*returnDollarLEN);					
+					sprintf($$,"%s(%s) {\n%s\n}\n%s %s",$1,$3,$6,$8,$9);
+				}
+				| IF '(' boolean_expr ')' '{' compound '}' ELSE '{' compound '}' {
+					$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);					
+					sprintf($$,"%s(%s) {\n%s\n}\n%s {\n%s\n}",$1,$3,$6,$8,$10);
+				}
+;
+boolean_expr	: expr { $$ = $1;/*not full implement yet*/ }			 
+type		: BOOLEAN {$$ = $1;} | CHAR {$$ = $1;} | INT {$$ = $1; } | FLOAT {$$ = $1;} | STRING {$$ = $1;} | VOID { $$ = $1; }
+;
+simple			: name assign ';' {
+					$$ = (char*)malloc(sizeof(char)*2*returnDollarLEN);
+					sprintf($$,"%s %s ;",$1,$2);
+				}
+				| PRINT '(' expr ')' ';' { 
+					$$ = (char*)malloc(sizeof(char)*5*returnDollarLEN);
+					sprintf($$,"%s(%s) ;",$1,$3);
+				}
+				| READ '(' name ')' ';' { 
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"%s(%s) ;",$1,$3);
+				}
+				| name PPLUS ';' { 
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"%s%s ;",$1,$2);
+				}
+				| name MMINUS ';' { 
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"%s%s ;",$1,$2);
+				}
+				| expr ';' { 
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"%s ;",$1);
+				}
+				| ';' { $$ = ";"; }
+;
+name			: ID { $$ = $1; }
+				| ID '.' ID { 
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"%s.%s",$1,$3);
+				}
+;
+identifier_list : ID { $$ = $1; }
+				| ID assign {
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"%s %s",$1,$2);
+				}
+				| ID assign ',' identifier_list {
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"%s %s, %s",$1,$2,$4);
+				}
+				| ID ',' identifier_list {
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"%s, %s",$1,$3);
+				}
+				| arrinit { $$ = $1; }
+				| arrinit ',' identifier_list {
+					$$ = (char*)malloc(sizeof(char)*8*returnDollarLEN);
+					sprintf($$,"%s, %s",$1,$3);
+				}
+;	
+
 expr			: term { $$ = $1;}
 				| expr '+' term {
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
@@ -311,17 +361,14 @@ compound		: declaration {
 					$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
 					sprintf($$,"%s",$1);
 				}
-				| use_var ';' {
-					$$ = (char*)malloc(sizeof(char)*5*returnDollarLEN);
-					sprintf($$,"%s ;",$1);
-				}
+				| simple { $$ = $1; }
 				| declaration compound {
 					$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
 					sprintf($$,"%s\n%s",$1,$2);
 				}
-				| use_var ';' compound {
+				| simple compound {
 					$$ = (char*)malloc(sizeof(char)*5*returnDollarLEN);
-					sprintf($$,"%s ;\n%s",$1,$3);
+					sprintf($$,"%s\n%s",$1,$2);
 				}
 ;
 function		: ID '(' ')' {
@@ -333,13 +380,8 @@ function		: ID '(' ')' {
 					sprintf($$,"%s(%s)",$1,$3);
 				}
 ;
-func_parem		: ID { $$ = $1; }
-				| ID ',' func_parem {
-					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
-					sprintf($$,"%s, %s",$1,$3);
-				}
-				| function { $$ = $1; }
-				| function ',' func_parem {
+func_parem		: expr { $$ = $1; }
+				| expr ',' func_parem {
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
 					sprintf($$,"%s, %s",$1,$3);
 				}

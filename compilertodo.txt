@@ -30,11 +30,13 @@ int apple(int b){
 	float c=3.0;
 }
 private int banana(int b,float c){ int c; }
-
+----------2.3.2------
+clear!!!!
+a*b*c*d;
+---2.3.3----
 ------------------------------------------------------------------------
 to be done:
 
-1.0+2.0 become 1.0 and +2.0
 zero_divisor (need more implement)
 final float pi = 3.14;
 
@@ -63,7 +65,7 @@ int clear(int x,int y=2){     <== overloading
 int clear(int x=1){} <= default value
 
 
-statements：compound, simple, conditional, loop, return, and method call
+statements：compound(x), simple(x), conditional, loop, return, and method call
 compound
 {
     {zero or more variable and constant declaration}
@@ -78,14 +80,8 @@ compound statement 內宣告的 variables 和 constants 有區域性
 
 ID determine variable or function
 
-can you declare?
-void func(int a[]=[0,1,2,3]);
-void func(int a, b, float c);
-
-method_declr_parem  and  declaration  priority problem
 
 
-use_variable
-a = 1;
-a + 1
-b++
+
+NOT ->
+!a;

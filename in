@@ -63,3 +63,20 @@ a+-b;
 (1+2)*3;
 b+add(c,d);
 a*b*c*d;
+b+cat(c--,++d);
+
+print(a+b);
+read(my.hand);
+my.hand=39;
+;
+my.hand++;
+
+if(a) ++a;
+else --a;
+
+if(a){
+	++a;
+	a=a+1;
+}
+
+else a;
