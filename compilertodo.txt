@@ -14,6 +14,13 @@ int a[] = {1,2,3};
 
 ---2.2---
 no method declaration in method (method = function)
+method_modifier type identifier({zero or more formal arguments})
+method_modifier ->
+	public | protected | private
+for example:
+boolean func1(int x, int y, String z) {}
+String func2(boolean a) {}
+void func3() {}
 
 ---2.3---
 apple(a,banana(a));  <- not declare
@@ -23,6 +30,7 @@ int apple(int b){
 	float c=3.0;
 }
 private int banana(int b,float c){ int c; }
+
 ------------------------------------------------------------------------
 to be done:
 
@@ -46,19 +54,13 @@ int clear(){
 	method;
 	return 0;
 }
-int clear(int x,y=2){     <== overloading
+int clear(int x,int y=2){     <== overloading
 	method;
 	return x;
 }
 
 
-method_modifier type identifier({zero or more formal arguments})
-method_modifier ->
-	public | protected | private
-for example:
-boolean func1(int x, int y, String z) {}
-String func2(boolean a) {}
-void func3() {}
+int clear(int x=1){} <= default value
 
 
 statements：compound, simple, conditional, loop, return, and method call

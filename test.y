@@ -43,12 +43,36 @@ method_declr: type ID '(' method_declr_parem ')' '{' compound '}' { /*function*/
 			| type ID '('  ')' '{' compound '}' { /*function*/
 				/* ps compound is things inside function(){ HERE } */
 				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
-				sprintf($$,"%s %s %s(){\n%s\n}",$1,$2,$6);
+				sprintf($$,"%s %s(){\n%s\n}",$1,$2,$6);
 			}
 			| method_modifier type ID '(' ')' '{' compound '}' { /*function*/
 				/* ps compound is things inside function(){ HERE } */
 				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
 				sprintf($$,"%s %s %s(){\n%s\n}",$1,$2,$3,$7);
+			}
+			| type ID '(' method_declr_parem ')' '{' '}' { /*function*/
+				/* ps compound is things inside function(){ HERE } */
+				fprintf(stderr,"Warning: function body in declaration is empty\n");
+				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
+				sprintf($$,"%s %s(%s){ }",$1,$2,$4);
+			}
+			| method_modifier type ID '(' method_declr_parem ')' '{' '}' { /*function*/
+				/* ps compound is things inside function(){ HERE } */
+				fprintf(stderr,"Warning: function body in declaration is empty\n");
+				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
+				sprintf($$,"%s %s %s(%s){ }",$1,$2,$3,$5);
+			}
+			| type ID '('  ')' '{' '}' { /*function*/
+				/* ps compound is things inside function(){ HERE } */
+				fprintf(stderr,"Warning: function body in declaration is empty\n");
+				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
+				sprintf($$,"%s %s(){ }",$1,$2);
+			}
+			| method_modifier type ID '(' ')' '{' '}' { /*function*/
+				/* ps compound is things inside function(){ HERE } */
+				fprintf(stderr,"Warning: function body in declaration is empty\n");
+				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
+				sprintf($$,"%s %s %s(){ }",$1,$2,$3);
 			}
 			| type ID '(' method_declr_parem ')' ';' { /* function declaration */
 				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
@@ -74,6 +98,10 @@ method_declr_parem : type ID {
 					| type ID ',' method_declr_parem {
 						$$ = (char*)malloc(sizeof(char)*2*returnDollarLEN);
 						sprintf($$,"%s %s, %s",$1,$2,$4);
+					}
+					| type ID {
+						$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+						sprintf($$,"%s %s",$1,$2);
 					}
 ;
 type		: BOOLEAN {$$ = $1;} | CHAR {$$ = $1;} | INT {$$ = $1; } | FLOAT {$$ = $1;} | STRING {$$ = $1;}
