@@ -210,17 +210,17 @@ expr			: term { $$ = $1;}
 				}
 ;
 term			: factor { $$ = $1; }
-				| factor '*' factor {
+				| factor '*' term {
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
 					sprintf($$,"%s * %s",$1,$3);
 				}
-				| factor '/' factor {
+				| factor '/' term {
 					/*zero divisor*/
-					if($3[0]=='0') printf("zero divisor\n");
+					if($3[0]=='0') fprintf(stderr,"zero divisor\n");
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
 					sprintf($$,"%s / %s",$1,$3);
 				}
-				| factor '%' factor {
+				| factor '%' term {
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
 					sprintf($$,"%s \% %s",$1,$3);
 				}
@@ -267,9 +267,17 @@ prefixOp		: PPLUS ID {
 					/* need implement ID = function or variable */
 					/* if ID is variable */
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
-					sprintf($$,"-%s",$2); printf("debug %s",$$);
+					sprintf($$,"-%s",$2);
 					/* if ID is function */
 					/*fprintf(stderr,"function name doesn't support -- operator\n");*/
+				}
+				| '+' const_expr {
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"-%s",$2);
+				}
+				| '-' const_expr {
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"-%s",$2);
 				}
 ;
 postfixOp		: ID PPLUS {

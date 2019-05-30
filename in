@@ -59,7 +59,7 @@ class Point {
 
 a = a+ -b;
 a+b;
-a + -b;
-(1 + 2)*3;
+a+-b;
+(1+2)*3;
 b+add(c,d);
 a*b*c*d;
