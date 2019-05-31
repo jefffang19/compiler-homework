@@ -34,6 +34,8 @@ private int banana(int b,float c){ int c; }
 clear!!!!
 a*b*c*d;
 ---2.3.3----
+clear!  i hope
+---2.3.4----
 ------------------------------------------------------------------------
 to be done:
 

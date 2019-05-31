@@ -35,7 +35,7 @@ integer [0-9]+
 real [0-9]+\.[0-9]+("e"[+-]{0,1}[0-9]+){0,1}|[0-9]+E[+-]{0,1}[0-9]+
 space [ \t]
 string \"(\\.|[^\n"\\])*\"
-ID [^.,:;\(\)\[\]\{\}+\-*/%=<! \t\r\n]+
+ID [^.,:;\(\)\[\]\{\}+\-*/%=<>! \t\r\n]+
 %%
 {comment}		{ /*do nothing*/ }
 {commenterr}	{ fprintf(stderr,"Line:%d, 1st char: %d, error! c-type comment \"*/\" not matched!\n",yylineno, charcnt+1); return 0;}

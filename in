@@ -79,4 +79,13 @@ if(a){
 	a=a+1;
 }
 
+if(a);
+else if (a) print(g);
 else a;
+
+
+while(a>1) a++;
+for(int a=0;a<b;a++){
+	print(a);
+}
+
