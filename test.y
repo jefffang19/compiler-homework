@@ -15,7 +15,7 @@
 %type<i> INTEGER
 %type<d> REAL
 %%
-readin		: readin declaration { printf("%s",$2); }
+readin		: readin declaration ';'{ printf("%s ;",$2); }
 			| readin method_declr { printf("%s",$2); }
 			| readin class_declr { printf("%s",$2); }
 			| readin simple { printf("%s",$2); }
@@ -24,13 +24,13 @@ readin		: readin declaration { printf("%s",$2); }
 			| readin loop { printf("%s",$2); }
 			| { /*empty*/ }
 ;
-declaration	: type identifier_list ';' {
+declaration	: type identifier_list {
 				$$ = (char*)malloc(sizeof(char)*3*returnDollarLEN);				
-				sprintf($$,"%s %s ;",$1,$2);
+				sprintf($$,"%s %s",$1,$2);
 			}
-			| STATIC type identifier_list ';' {
+			| STATIC type identifier_list {
 				$$ = (char*)malloc(sizeof(char)*3*returnDollarLEN);	
-				sprintf($$,"static %s %s ;",$2,$3);
+				sprintf($$,"static %s %s",$2,$3);
 			}
 ;
 class_declr	: CLASS ID '{' class_body '}' {
@@ -38,15 +38,16 @@ class_declr	: CLASS ID '{' class_body '}' {
 				sprintf($$,"%s %s {\n%s\n}",$1,$2,$4);
 			}
 ;
-class_body	: declaration {
-				$$ = $1;
+class_body	: declaration ';' {
+				$$ = (char*)malloc(sizeof(char)*returnDollarLEN);	
+				sprintf($$,"%s ;",$1);
 			}
 			| method_declr {
 				$$ = $1;
 			}
-			| declaration class_body {
+			| declaration ';' class_body {
 				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);	
-				sprintf($$,"%s\n%s",$1,$2);
+				sprintf($$,"%s ;\n%s",$1,$3);
 			}
 			| method_declr class_body {
 				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);	
@@ -244,19 +245,19 @@ loop		: WHILE '(' boolean_expr ')' simple {
 ;
 for_parem	: forinitop ';' boolean_expr ';' forupdate {
 					$$ = (char*)malloc(sizeof(char)*2*returnDollarLEN);
-					sprintf($$,"%s ; %s ; %s ;",$1,$3,$5);
+					sprintf($$,"%s ; %s ; %s",$1,$3,$5);
 			}
 			| ';' boolean_expr ';' forupdate {
 					$$ = (char*)malloc(sizeof(char)*2*returnDollarLEN);
-					sprintf($$," ; %s ; %s ;",$2,$4);
+					sprintf($$," ; %s ; %s",$2,$4);
 			}
 			| forinitop ';' ';' forupdate {
 					$$ = (char*)malloc(sizeof(char)*2*returnDollarLEN);
-					sprintf($$,"%s ; ; %s ",$1,$4);
+					sprintf($$,"%s ; ; %s",$1,$4);
 			}
 			| forinitop ';' boolean_expr ';' {
 					$$ = (char*)malloc(sizeof(char)*2*returnDollarLEN);
-					sprintf($$,"%s ; %s  ;",$1,$3);
+					sprintf($$,"%s ; %s ;",$1,$3);
 			}
 			| ';' ';' forupdate {
 					$$ = (char*)malloc(sizeof(char)*2*returnDollarLEN);
@@ -328,10 +329,14 @@ simple			: name assign ';' {
 				}
 				| ';' { $$ = ";"; }
 ;
-name			: ID { $$ = $1; }
+name			: ID { $$ = $1; printf("debug %s",$$);}
 				| ID '.' ID { 
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
 					sprintf($$,"%s.%s",$1,$3);
+				}
+				| ID '[' INTEGER ']' {
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"%s[%d]",$1,$3);
 				}
 ;
 identifier_list : ID { $$ = $1; }
@@ -381,6 +386,10 @@ term			: factor { $$ = $1; }
 				}
 ;
 factor			: ID { $$ = $1; }
+				| ID '[' INTEGER ']' {
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"%s[%d]",$1,$3);
+				}
 				| const_expr { $$ = $1;}
 				| '(' expr ')' {
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
@@ -390,7 +399,7 @@ factor			: ID { $$ = $1; }
 					$$ = $1;
 				}
 				| postfixOp {
-					$$ = $1; printf("debug\n");
+					$$ = $1;;
 				}
 				| function { $$ = $1; }
 ;
@@ -462,16 +471,21 @@ const_expr		: INTEGER {
 					sprintf($$,"%g",$1);
 				}
 ;
-compound		: declaration {
-					$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
-					sprintf($$,"%s",$1);
+compound		: declaration ';' {
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"%s ;",$1);
 				}
 				| simple { $$ = $1; }
-				| declaration compound {
+				| conditional { $$ = $1; }
+				| declaration ';' compound {
 					$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
-					sprintf($$,"%s\n%s",$1,$2);
+					sprintf($$,"%s\n%s",$1,$3);
 				}
 				| simple compound {
+					$$ = (char*)malloc(sizeof(char)*5*returnDollarLEN);
+					sprintf($$,"%s ;\n%s",$1,$2);
+				}
+				| conditional compound {
 					$$ = (char*)malloc(sizeof(char)*5*returnDollarLEN);
 					sprintf($$,"%s\n%s",$1,$2);
 				}

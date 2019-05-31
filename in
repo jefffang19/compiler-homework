@@ -85,7 +85,22 @@ else a;
 
 
 while(a>1) a++;
-for(int a=0;a<b;a++){
+for(int a=0;a<b;a=a+1){
 	print(a);
+}
+
+int sum = 0, i =1 ;
+while ( i <= 10) {
+    sum = sum + i ;
+	i = i + 1 ;
+}
+
+a[12] + a[21];
+a[12] = 2;
+
+for (int index = 0; index < 10; index++) {
+    if (list[index] > max) {
+        max = list[index];
+    }
 }
 

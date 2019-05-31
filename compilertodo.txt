@@ -36,6 +36,8 @@ a*b*c*d;
 ---2.3.3----
 clear!  i hope
 ---2.3.4----
+clear~
+for(;;a=a+1);
 ------------------------------------------------------------------------
 to be done:
 
@@ -83,7 +85,10 @@ compound statement 內宣告的 variables 和 constants 有區域性
 ID determine variable or function
 
 
-
-
 NOT ->
 !a;
+
+a[12]=2;
+a[b]=2;
+a[getsize(b)]=2;
+a[b]+a[b];
