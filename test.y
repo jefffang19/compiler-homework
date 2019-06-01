@@ -11,7 +11,7 @@
 /* keywords */
 %token BOOLEAN BREAK BYTE CASE CHAR CATCH CLASS CONST CONTINUE DEFAULT DO DOUBLE ELSE EXTENDS FALSE2 FINAL FINALLY FLOAT FOR IF IMPLEMENTS INT LONG MAIN NEW PRINT PRIVATE PROTECTED PUBLIC RETURN SHORT STATIC STRING SWITCH THIS TRUE2 TRY VOID WHILE READ
 %token INTEGER REAL ID PPLUS MMINUS SEQUAL BEQUAL EQUAL NEQUAL AND OR 
-%type<s> BOOLEAN BREAK BYTE CASE CHAR CATCH CLASS CONST CONTINUE DEFAULT DO DOUBLE ELSE EXTENDS FALSE2 FINAL FINALLY FLOAT FOR IF IMPLEMENTS INT LONG MAIN NEW PRINT PRIVATE PROTECTED PUBLIC RETURN SHORT STATIC STRING SWITCH THIS TRUE2 TRY VOID WHILE ID type identifier_list assign expr arrinit arrinit_expr method_modifier method_declr compound function func_parem declaration method_declr_parem class_declr class_body simple PPLUS MMINUS SEQUAL BEQUAL EQUAL NEQUAL AND OR prefixOp postfixOp const_expr term factor name READ boolean_expr conditional infixop forinitop forupdate for_parem loop
+%type<s> BOOLEAN BREAK BYTE CASE CHAR CATCH CLASS CONST CONTINUE DEFAULT DO DOUBLE ELSE EXTENDS FALSE2 FINAL FINALLY FLOAT FOR IF IMPLEMENTS INT LONG MAIN NEW PRINT PRIVATE PROTECTED PUBLIC RETURN SHORT STATIC STRING SWITCH THIS TRUE2 TRY VOID WHILE ID type identifier_list assign expr arrinit arrinit_expr method_modifier method_declr compound function func_parem declaration method_declr_parem class_declr class_body simple PPLUS MMINUS SEQUAL BEQUAL EQUAL NEQUAL AND OR prefixOp postfixOp const_expr term factor name READ boolean_expr conditional infixop forinitop forupdate for_parem loop return
 %type<i> INTEGER
 %type<d> REAL
 %%
@@ -329,7 +329,7 @@ simple			: name assign ';' {
 				}
 				| ';' { $$ = ";"; }
 ;
-name			: ID { $$ = $1; printf("debug %s",$$);}
+name			: ID { $$ = $1; }
 				| ID '.' ID { 
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
 					sprintf($$,"%s.%s",$1,$3);
@@ -337,6 +337,14 @@ name			: ID { $$ = $1; printf("debug %s",$$);}
 				| ID '[' INTEGER ']' {
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
 					sprintf($$,"%s[%d]",$1,$3);
+				}
+				| ID '[' ID ']' {
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"%s[%s]",$1,$3);
+				}
+				| ID '[' function ']' {
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"%s[%s]",$1,$3);
 				}
 ;
 identifier_list : ID { $$ = $1; }
@@ -385,11 +393,7 @@ term			: factor { $$ = $1; }
 					sprintf($$,"%s \% %s",$1,$3);
 				}
 ;
-factor			: ID { $$ = $1; }
-				| ID '[' INTEGER ']' {
-					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
-					sprintf($$,"%s[%d]",$1,$3);
-				}
+factor			: name { $$ = $1; }
 				| const_expr { $$ = $1;}
 				| '(' expr ')' {
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
@@ -483,11 +487,15 @@ compound		: declaration ';' {
 				}
 				| simple compound {
 					$$ = (char*)malloc(sizeof(char)*5*returnDollarLEN);
-					sprintf($$,"%s ;\n%s",$1,$2);
+					sprintf($$,"%s\n%s",$1,$2);
 				}
 				| conditional compound {
 					$$ = (char*)malloc(sizeof(char)*5*returnDollarLEN);
 					sprintf($$,"%s\n%s",$1,$2);
+				}
+				| return ';' {
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"%s ;",$1);
 				}
 ;
 function		: ID '(' ')' {
@@ -504,6 +512,16 @@ func_parem		: expr { $$ = $1; }
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
 					sprintf($$,"%s, %s",$1,$3);
 				}
+;
+return			: RETURN expr {
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"%s %s",$1,$2);
+				}
+				| RETURN boolean_expr {
+					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
+					sprintf($$,"%s %s",$1,$2);
+				}
+				| RETURN { $$ = $1; }
 ;
 %%
 int main(){

@@ -104,3 +104,10 @@ for (int index = 0; index < 10; index++) {
     }
 }
 
+int forign(int a){
+	print(a);
+	return 0;
+}
+
+print("hello world\n");
+
