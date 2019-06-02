@@ -21,6 +21,7 @@ int a[10];
 int a[10] = {1,2,3};
 int a[] = {1,2,3};
 int a = 1/0;
+final float pi = 3.14;
 apple();
 apple(a);
 apple(a,b);
@@ -32,6 +33,7 @@ int apple(int b){
 	float c=3.0;
 }
 private int banana(int b,float c){ int c; }
+private int banana(int b = 2,float c){ int c; }
 int durian();
 protected int banana();
 private String elephant(){ int c; }
@@ -52,6 +54,7 @@ class Point {
 		y = 0;
 	}
 }
+Point Left = new Point();
 
 -b;
 -2;
@@ -109,5 +112,16 @@ int forign(int a){
 	return 0;
 }
 
-print("hello world\n");
+print(a+b);
+print("hello world\n" + "people\n" );
 
+void restring(){
+	return "hello";
+}
+
+if(!a){ print("not"); }
+
+a[12]=2;
+a[b]=2;
+a[getsize(b)]=2;
+a[b]+a[b];

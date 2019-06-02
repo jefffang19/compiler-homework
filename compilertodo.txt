@@ -11,7 +11,20 @@ int[] a = new int[10];
 int *a = new int[10];
 int a[10] = {1,2,3}
 int a[] = {1,2,3};
-
+final float pi = 3.14;
+class Point{
+	static int counter;
+	int x, y;
+	void clear(){
+		x = 0;
+		y = 0;
+	}
+}
+Point Left = new Point();
+a[12]=2;
+a[b]=2;
+a[getsize(b)]=2;
+a[b]+a[b];
 ---2.2---
 no method declaration in method (method = function)
 method_modifier type identifier({zero or more formal arguments})
@@ -21,7 +34,7 @@ for example:
 boolean func1(int x, int y, String z) {}
 String func2(boolean a) {}
 void func3() {}
-
+int clear(int x=1){} <= default value
 ---2.3---
 apple(a,banana(a));  <- not declare
 int apple(int b){
@@ -38,22 +51,29 @@ clear!  i hope
 ---2.3.4----
 clear~
 for(;;a=a+1);
+---2.3---
+statements：compound, simple, conditional, loop, return, and method call
+
+NOT ->!a;
+
+----3------
+compound statement 內宣告的 variables 和 constants 有區域性
+duplicate def
+
 ------------------------------------------------------------------------
 to be done:
 
 zero_divisor (need more implement)
-final float pi = 3.14;
 
-class Point{
-	static int counter;
-	int x, y;
-	void clear(){
-		x = 0;
-		y = 0;
-	}
-}
-Point Left = new Point();
 
+int func( "the scope of paras here" )
+
+when use id, check if exsist
+
+
+
+---------------------------------------------------------
+don't want to do
 int clear();
 ...
 int clear(){
@@ -65,30 +85,7 @@ int clear(int x,int y=2){     <== overloading
 	return x;
 }
 
-
-int clear(int x=1){} <= default value
-
-
-statements：compound(x), simple(x), conditional, loop, return, and method call
-compound
-{
-    {zero or more variable and constant declaration}
-    {zero or more statements}
-    /*for example*/
-    int a ;
-	read(a) ;
-	print(a) ;
-}
-compound statement 內宣告的 variables 和 constants 有區域性
-
-
 ID determine variable or function
 
 
-NOT ->
-!a;
 
-a[12]=2;
-a[b]=2;
-a[getsize(b)]=2;
-a[b]+a[b];

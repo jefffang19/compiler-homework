@@ -6,18 +6,7 @@
 static int current_line = 0;
 void print_lineno(); /* check if need to print Line no:*/
 static int charcnt = 0;
-struct st{
-	int index;
-	char *name;
-	struct st *next;
-}*table;
-typedef struct st ST;
-static int tablecnt = 0;
-void create_st();
-int lookup_st(char const*);  /* returned index starts with 1 , return -1 if not exist*/
-int insert_st(char const*);
-int size_st();
-void dump_st();
+
 int str_eql(char const * str1, char const * str2){
 	if(strcmp(str1,str2) == 0) return 1;
 	else return 0;
@@ -156,87 +145,7 @@ ID [^.,:;\(\)\[\]\{\}+\-*/%=<>! \t\r\n]+
 	return(ID);
 }
 %%
-/*
-int main(argc,argv)
-int argc;
-char **argv;
-{
-	if(argc > 1){
-		FILE *file;
-		file = fopen(argv[1],"r");
-		if(!file){
-			fprintf(stderr,"could not open %s!\n",argv[1]);
-			return 1;
-		}
-		yyin = file;
-	}
-	create_st(); // create a new symbol table 
-	yylex();
-	printf("\n");
-	dump_st();
-	return 0;
-}
-*/
 
-int size_st(){
-	if(tablecnt) return tablecnt-1;
-	else return 0;
-}
-
-void create_st(){
-	if(tablecnt){ printf("table already exsist!\n"); return; }
-	tablecnt=1;
-	table = malloc(sizeof(ST));
-	table->name = NULL;
-	table->next = NULL;
-}
-
-int lookup_st(char const *s){
-	if(!tablecnt){ printf("table not exsist!\n"); return -2; }
-	ST *current = table;
-	while(current!=NULL && current->name!=NULL){
-		if(strcmp(current->name,s) == 0) return current->index;
-		current = current->next;
-	}
-	return -1;
-}
-	
-int insert_st(char const *s){
-	if(!tablecnt){ printf("table not exsist!\n"); return -1; }
-	ST *current = table;
-	int i = 1;
-	while(current->next!=NULL){ current = current->next; ++i; }
-	current->index = i;
-	current->name = malloc(sizeof(char)*strlen(s));
-	current->next = malloc(sizeof(ST));
-	strcpy(current->name,s);
-	++tablecnt;
-	return current->index;
-}
-void dump_st(){
-	if(!tablecnt){ printf("table not exsist!\n"); return; }
-	ST *current = table;
-	printf("The symbol table contains:\n");
-	while(current!=NULL){
-		if(current->name!=NULL) printf("%s ",current->name);
-		current = current->next;
-	}
-	printf("\n");
-	return;
-}
-
-void del_st(){
-	if(!tablecnt){ printf("table not exsist!\n"); return; }
-	ST *current = table, *prev = table;
-	while(current!=NULL){
-		free(current->name);
-		current = current->next;
-		free(prev);
-		prev = current;
-	}
-	tablecnt = 0;
-	return;
-}
 void print_lineno(){
 	if(current_line!=yylineno){
 		printf("Line %d: ",yylineno);
