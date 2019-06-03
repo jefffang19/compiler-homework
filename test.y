@@ -26,6 +26,9 @@ int check_sameid(char str[]);
 
 int sem_def;
 void yyerror(const char *str);
+
+static int lineno = 1;
+
 %}
 %union{
 	char* s;
@@ -35,20 +38,21 @@ void yyerror(const char *str);
 }
 /* keywords */
 %token BOOLEAN BREAK BYTE CASE CHAR CATCH CLASS CONST CONTINUE DEFAULT DO DOUBLE ELSE EXTENDS FALSE2 FINAL FINALLY FLOAT FOR IF IMPLEMENTS INT LONG MAIN NEW PRINT PRIVATE PROTECTED PUBLIC RETURN SHORT STATIC STRING SWITCH THIS TRUE2 TRY VOID WHILE READ
-%token INTEGER REAL ID PPLUS MMINUS SEQUAL BEQUAL EQUAL NEQUAL AND OR
+%token INTEGER REAL ID PPLUS MMINUS SEQUAL BEQUAL EQUAL NEQUAL AND OR EMPTYLINE
 %type<s> BOOLEAN BREAK BYTE CASE CHAR CATCH CLASS CONST CONTINUE DEFAULT DO DOUBLE ELSE EXTENDS FALSE2 FINAL FINALLY FLOAT FOR IF IMPLEMENTS INT LONG MAIN NEW PRINT PRIVATE PROTECTED PUBLIC RETURN SHORT STATIC STRING SWITCH THIS TRUE2 TRY VOID WHILE ID type identifier_list assign expr arrinit arrinit_expr method_modifier method_declr compound function func_parem declaration method_declr_parem class_declr class_body simple PPLUS MMINUS SEQUAL BEQUAL EQUAL NEQUAL AND OR prefixOp postfixOp const_expr term factor name READ boolean_expr conditional infixop forinitop forupdate for_parem loop func_return new_obj
 %type<i> INTEGER
 %type<d> REAL
 %type<c> leftcurly rightcurly
 %%
-readin		: readin declaration ';'{ printf("%s ;",$2); }
-			| readin method_declr { printf("%s",$2); }
-			| readin class_declr { printf("%s",$2); }
-			| readin new_obj { printf("%s ;",$2); }
-			| readin simple { printf("%s",$2); }
-			| readin conditional { printf("%s",$2); }
-			| readin boolean_expr ';' { printf("%s ;",$2); }
-			| readin loop { printf("%s",$2); }
+readin		: readin declaration ';'{ printf("%s ;\n",$2); }
+			| readin method_declr { printf("%s\n",$2); }
+			| readin class_declr { printf("%s\n",$2); }
+			| readin new_obj { printf("%s ;\n",$2); }
+			| readin simple { printf("%s\n",$2); }
+			| readin conditional { printf("%s\n",$2); }
+			| readin boolean_expr ';' { printf("%s ;\n",$2); }
+			| readin loop { printf("%s\n",$2); }
+			| readin EMPTYLINE { printf("LINE %d:\n",lineno++); }
 			| { /*empty*/ }
 ;
 declaration	: type identifier_list {

@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 static int current_line = 0;
-void print_lineno(); /* check if need to print Line no:*/
+/*void print_lineno();*/ /* check if need to print Line no:*/
 static int charcnt = 0;
 
 int str_eql(char const * str1, char const * str2){
@@ -15,8 +15,8 @@ int str_eql(char const * str1, char const * str2){
 
 %option yylineno
 eol \r|\r\n|\n
+emptyline ^\n
 comment "/*"[^*]*[*]+([^/][^*]*[*]+)*"/"|"//".*|"//".*[\r][\n]
-commenterr "/*"
 keyword boolean|break|byte|case|char|catch|class|const|continue|default|do|double|else|extends|false|final|finally|float|for|if|implements|int|long|main|new|print|private|protected|public|return|short|static|String|switch|this|true|try|void|while|read
 symbol [.,:;\(\)\[\]\{\}]
 operator [+\-*/%=<>!]|"++"|"--"|<=|>=|==|!=|&&|"||"
@@ -26,10 +26,9 @@ space [ \t]
 string \"(\\.|[^\n"\\])*\"
 ID [^.,:;\(\)\[\]\{\}+\-*/%=<>! \t\r\n]+
 %%
-{comment}		{ /*do nothing*/ }
-{commenterr}	{ fprintf(stderr,"Line:%d, 1st char: %d, error! c-type comment \"*/\" not matched!\n",yylineno, charcnt+1); return 0;}
+{comment}		{ printf("%s\n",yytext); }
 {symbol}		{
-	print_lineno();
+	/*print_lineno();*/
 	charcnt+=yyleng;
 	switch(yytext[0]){
 		case '.': return('.');
@@ -45,9 +44,10 @@ ID [^.,:;\(\)\[\]\{\}+\-*/%=<>! \t\r\n]+
 	}
 }
 {space} 		{ ++charcnt; }
-{eol}			{ printf("\n"); charcnt = 0; }
+{emptyline} 	{ return(EMPTYLINE); }
+{eol}			{ charcnt = 0; }
 {operator} 		{
-	print_lineno();
+	/*print_lineno();*/
 	charcnt+=yyleng;
 	if(str_eql(yytext,"+")) return('+');
 	else if(str_eql(yytext,"-")) return('-');
@@ -72,26 +72,26 @@ ID [^.,:;\(\)\[\]\{\}+\-*/%=<>! \t\r\n]+
 	}	
 }
 {integer}		{
-	print_lineno();
+	/*print_lineno();*/
 	charcnt+=yyleng;
 	yylval.i = atoi(yytext);	
 	return(INTEGER);
 }
 {real}			{
-	print_lineno();
+	/*print_lineno();*/
 	charcnt+=yyleng;
 	yylval.d = atof(yytext);	
 	return(REAL);
 }
 {string}		{
-	print_lineno();
+	/*print_lineno();*/
 	charcnt+=yyleng;
 	yylval.s = (char*)malloc(sizeof(char)*yyleng);
 	strcpy(yylval.s,yytext);	
 	return(STRING);
 }
 {keyword} 		{
-	print_lineno();
+	/*print_lineno();*/
 	charcnt+=yyleng;
 	yylval.s = (char*)malloc(sizeof(char)*yyleng);
 	strcpy(yylval.s,yytext);
@@ -138,17 +138,17 @@ ID [^.,:;\(\)\[\]\{\}+\-*/%=<>! \t\r\n]+
 	else if(str_eql(yytext,"read")) return(READ);
 }
 {ID}			{
-	print_lineno();
+	/*print_lineno();*/
 	charcnt+=yyleng;
 	yylval.s = (char*)malloc(sizeof(char)*yyleng);
 	strcpy(yylval.s,yytext);
 	return(ID);
 }
 %%
-
+/*
 void print_lineno(){
 	if(current_line!=yylineno){
 		printf("Line %d: ",yylineno);
 		current_line = yylineno;
 	}
-}
+}*/

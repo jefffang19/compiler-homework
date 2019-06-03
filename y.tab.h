@@ -95,7 +95,8 @@ extern int yydebug;
     EQUAL = 305,
     NEQUAL = 306,
     AND = 307,
-    OR = 308
+    OR = 308,
+    EMPTYLINE = 309
   };
 #endif
 /* Tokens.  */
@@ -150,20 +151,21 @@ extern int yydebug;
 #define NEQUAL 306
 #define AND 307
 #define OR 308
+#define EMPTYLINE 309
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 
 union YYSTYPE
 {
-#line 30 "test.y" /* yacc.c:1909  */
+#line 33 "test.y" /* yacc.c:1909  */
 
 	char* s;
 	char c;
 	float d;
 	int i;
 
-#line 167 "y.tab.h" /* yacc.c:1909  */
+#line 169 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
