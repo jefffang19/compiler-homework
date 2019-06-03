@@ -62,21 +62,21 @@ duplicate def
 
 error recovery
 
+format 
+
 ------------------------------------------------------------------------
 to be done:
-
-zero_divisor (need more implement)
-
 
 int func( "the scope of paras here" )
 
 when use id, check if exsist
 
-format 
+
 
 
 ---------------------------------------------------------
 don't want to do
+zero_divisor (need more implement)
 int clear();
 ...
 int clear(){

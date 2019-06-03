@@ -908,7 +908,7 @@ case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
 #line 29 "B053040017.l"
-{ printf("%s\n",yytext); }
+{ printf("%s\n",yytext); return(COMMENT);}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP

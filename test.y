@@ -29,6 +29,9 @@ void yyerror(const char *str);
 
 static int lineno = 1;
 
+void print_lineno(char str[], int addsemi);
+void substr(char str[], int begin, int end);
+
 %}
 %union{
 	char* s;
@@ -37,22 +40,23 @@ static int lineno = 1;
 	int i;
 }
 /* keywords */
-%token BOOLEAN BREAK BYTE CASE CHAR CATCH CLASS CONST CONTINUE DEFAULT DO DOUBLE ELSE EXTENDS FALSE2 FINAL FINALLY FLOAT FOR IF IMPLEMENTS INT LONG MAIN NEW PRINT PRIVATE PROTECTED PUBLIC RETURN SHORT STATIC STRING SWITCH THIS TRUE2 TRY VOID WHILE READ
+%token BOOLEAN BREAK BYTE CASE CHAR CATCH CLASS CONST CONTINUE DEFAULT DO DOUBLE ELSE EXTENDS FALSE2 FINAL FINALLY FLOAT FOR IF IMPLEMENTS INT LONG MAIN NEW PRINT PRIVATE PROTECTED PUBLIC RETURN SHORT STATIC STRING SWITCH THIS TRUE2 TRY VOID WHILE READ COMMENT
 %token INTEGER REAL ID PPLUS MMINUS SEQUAL BEQUAL EQUAL NEQUAL AND OR EMPTYLINE
 %type<s> BOOLEAN BREAK BYTE CASE CHAR CATCH CLASS CONST CONTINUE DEFAULT DO DOUBLE ELSE EXTENDS FALSE2 FINAL FINALLY FLOAT FOR IF IMPLEMENTS INT LONG MAIN NEW PRINT PRIVATE PROTECTED PUBLIC RETURN SHORT STATIC STRING SWITCH THIS TRUE2 TRY VOID WHILE ID type identifier_list assign expr arrinit arrinit_expr method_modifier method_declr compound function func_parem declaration method_declr_parem class_declr class_body simple PPLUS MMINUS SEQUAL BEQUAL EQUAL NEQUAL AND OR prefixOp postfixOp const_expr term factor name READ boolean_expr conditional infixop forinitop forupdate for_parem loop func_return new_obj
 %type<i> INTEGER
 %type<d> REAL
 %type<c> leftcurly rightcurly
 %%
-readin		: readin declaration ';'{ printf("%s ;\n",$2); }
-			| readin method_declr { printf("%s\n",$2); }
-			| readin class_declr { printf("%s\n",$2); }
-			| readin new_obj { printf("%s ;\n",$2); }
-			| readin simple { printf("%s\n",$2); }
-			| readin conditional { printf("%s\n",$2); }
-			| readin boolean_expr ';' { printf("%s ;\n",$2); }
-			| readin loop { printf("%s\n",$2); }
+readin		: readin declaration ';'{ print_lineno($2,1); /*printf("%s ;\n",$2);*/ }
+			| readin method_declr { print_lineno($2,0); /*printf("%s\n",$2);*/ }
+			| readin class_declr { print_lineno($2,0); /*printf("%s\n",$2);*/ }
+			| readin new_obj ';' { print_lineno($2,1); /*printf("%s ;\n",$2);*/ }
+			| readin simple { print_lineno($2,0); /*printf("%s\n",$2);*/ }
+			| readin conditional { print_lineno($2,0); /*printf("%s\n",$2);*/ }
+			| readin boolean_expr ';' { print_lineno($2,1); /*printf("%s ;\n",$2);*/ }
+			| readin loop { print_lineno($2,0); /*printf("%s\n",$2);*/ }
 			| readin EMPTYLINE { printf("LINE %d:\n",lineno++); }
+			| readin COMMENT { ++lineno; }
 			| { /*empty*/ }
 ;
 declaration	: type identifier_list {
@@ -138,7 +142,7 @@ method_declr: type ID '(' method_declr_parem ')' leftcurly compound rightcurly {
 			}
 			| type ID '(' method_declr_parem ')' leftcurly rightcurly { /*function*/
 				/* ps compound is things inside function(){ HERE } */
-				fprintf(stderr,"Warning: function body in declaration is empty\n");
+				fprintf(stderr,">Warning: function body in declaration is empty\n");
 				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
 				if(check_sameid($2)) sprintf($$,"%s %s(%s){ }\n>'%s' is a duplicate identifier",$1,$2,$4,$2);
 				else{ 
@@ -148,7 +152,7 @@ method_declr: type ID '(' method_declr_parem ')' leftcurly compound rightcurly {
 			}
 			| method_modifier type ID '(' method_declr_parem ')' leftcurly rightcurly { /*function*/
 				/* ps compound is things inside function(){ HERE } */
-				fprintf(stderr,"Warning: function body in declaration is empty\n");
+				fprintf(stderr,">Warning: function body in declaration is empty\n");
 				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
 				if(check_sameid($3)) sprintf($$,"%s %s %s(%s){ }\n>'%s' is a duplicate identifier",$1,$2,$3,$5,$3);
 				else{ 
@@ -158,7 +162,7 @@ method_declr: type ID '(' method_declr_parem ')' leftcurly compound rightcurly {
 			}
 			| type ID '('  ')' leftcurly rightcurly { /*function*/
 				/* ps compound is things inside function(){ HERE } */
-				fprintf(stderr,"Warning: function body in declaration is empty\n");
+				fprintf(stderr,">Warning: function body in declaration is empty\n");
 				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
 				if(check_sameid($2)) sprintf($$,"%s %s(){ }\n>'%s' is a duplicate identifier",$1,$2,$2);
 				else{ 
@@ -168,7 +172,7 @@ method_declr: type ID '(' method_declr_parem ')' leftcurly compound rightcurly {
 			}
 			| method_modifier type ID '(' ')' leftcurly rightcurly { /*function*/
 				/* ps compound is things inside function(){ HERE } */
-				fprintf(stderr,"Warning: function body in declaration is empty\n");
+				fprintf(stderr,">Warning: function body in declaration is empty\n");
 				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
 				if(check_sameid($3)) sprintf($$,"%s %s %s(){ }\n>'%s' is a duplicate identifier",$1,$2,$3,$3);
 				else{ 
@@ -538,7 +542,7 @@ term			: factor { $$ = $1; }
 				}
 				| factor '/' term {
 					/*zero divisor*/
-					if($3[0]=='0') fprintf(stderr,"zero divisor\n");
+					if($3[0]=='0') fprintf(stderr,">zero divisor\n");
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
 					sprintf($$,"%s / %s",$1,$3);
 				}
@@ -699,6 +703,7 @@ int main(){
 	into_scope("global");
 	yyparse();
 	/*print_current();*/
+	printf("\n");
 	return 0;
 }
 
@@ -724,7 +729,6 @@ void print_current(){
 	for(i=0;i<cur_size;++i){
 		printf("%s\n",table.list[table.size-1].idlist[i]);
 	}
-	printf("\n");
 }
 
 int check_sameid(char str[]){
@@ -736,5 +740,28 @@ int check_sameid(char str[]){
 }
 
 void yyerror(const char *str){
-	fprintf(stderr,">%s in\n-->",str);
+	fprintf(stderr,">%s\n",str);
+}
+
+void print_lineno(char str[], int addsemi){
+	printf("LINE %d: ",lineno++);
+	/*printf("strlen %d",strlen(str));*/
+	if(addsemi){
+		printf("%s ;\n",str);
+		return;
+	}
+	int i,k=0;
+	for(i=0;i<strlen(str);++i){
+		if(str[i]=='\n' && (i+1) < strlen(str) && str[i+1]!='>'){
+			printf("\nLINE %d: ",lineno++);
+		}
+		else printf("%c",str[i]);
+	}
+	printf("\n");
+}
+
+void substr(char str[], int begin, int end){
+	char buff[end-begin+1];
+	int i;
+	for(i=begin;i<=end;++i) printf("%c",str[i]); 
 }

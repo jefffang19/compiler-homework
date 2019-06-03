@@ -85,18 +85,19 @@ extern int yydebug;
     VOID = 295,
     WHILE = 296,
     READ = 297,
-    INTEGER = 298,
-    REAL = 299,
-    ID = 300,
-    PPLUS = 301,
-    MMINUS = 302,
-    SEQUAL = 303,
-    BEQUAL = 304,
-    EQUAL = 305,
-    NEQUAL = 306,
-    AND = 307,
-    OR = 308,
-    EMPTYLINE = 309
+    COMMENT = 298,
+    INTEGER = 299,
+    REAL = 300,
+    ID = 301,
+    PPLUS = 302,
+    MMINUS = 303,
+    SEQUAL = 304,
+    BEQUAL = 305,
+    EQUAL = 306,
+    NEQUAL = 307,
+    AND = 308,
+    OR = 309,
+    EMPTYLINE = 310
   };
 #endif
 /* Tokens.  */
@@ -140,32 +141,33 @@ extern int yydebug;
 #define VOID 295
 #define WHILE 296
 #define READ 297
-#define INTEGER 298
-#define REAL 299
-#define ID 300
-#define PPLUS 301
-#define MMINUS 302
-#define SEQUAL 303
-#define BEQUAL 304
-#define EQUAL 305
-#define NEQUAL 306
-#define AND 307
-#define OR 308
-#define EMPTYLINE 309
+#define COMMENT 298
+#define INTEGER 299
+#define REAL 300
+#define ID 301
+#define PPLUS 302
+#define MMINUS 303
+#define SEQUAL 304
+#define BEQUAL 305
+#define EQUAL 306
+#define NEQUAL 307
+#define AND 308
+#define OR 309
+#define EMPTYLINE 310
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 
 union YYSTYPE
 {
-#line 33 "test.y" /* yacc.c:1909  */
+#line 36 "test.y" /* yacc.c:1909  */
 
 	char* s;
 	char c;
 	float d;
 	int i;
 
-#line 169 "y.tab.h" /* yacc.c:1909  */
+#line 171 "y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
