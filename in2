@@ -19,3 +19,9 @@ class Point{
 	float b;
 }
 
+int a[] = 2;
+int a = 2;
+
+if(a 1){
+	print(hello);
+}

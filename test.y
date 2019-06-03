@@ -25,6 +25,7 @@ void print_current();
 int check_sameid(char str[]);
 
 int sem_def;
+void yyerror(const char *str);
 %}
 %union{
 	char* s;
@@ -335,6 +336,7 @@ boolean_expr	: expr { $$ = $1;}
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);					
 					sprintf($$,"%s %s %s",$1,$2,$3);
 				}
+				| error { /* error recovery */ $$ = "ERROR HERE"; }
 ;
 infixop			: EQUAL { $$ = $1; }
 				| NEQUAL { $$ = $1; }
@@ -523,6 +525,7 @@ expr			: term { $$ = $1;}
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
 					sprintf($$,"%s - %s",$1,$3);
 				}
+				| error { /* error recovery */ $$ = "ERROR HERE"; }
 ;
 term			: factor { $$ = $1; }
 				| factor '*' term {
@@ -679,11 +682,13 @@ leftcurly 		: '{' {
 					into_scope("scope");
 					$$ = '{';
 				}
+;
 rightcurly		: '}' {
 					/*print_current();*/
 					out_scope();				
 					$$ = '}';
 				}
+;
 %%
 int main(){
 	table.size = 0;
@@ -724,4 +729,8 @@ int check_sameid(char str[]){
 		if(strcmp(table.list[table.size-1].idlist[i],str)==0) return 1;
 	}
 	return 0;
+}
+
+void yyerror(const char *str){
+	fprintf(stderr,">%s in\n-->",str);
 }
