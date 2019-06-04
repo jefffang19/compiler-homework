@@ -1,0 +1,19 @@
+LINE 1: class Point {
+LINE 2: int x, y ;
+LINE 3: int p ;
+LINE 4: boolean test(){
+LINE 5: int x
+LINE 6: float w
+LINE 7: char x
+>'x' is a duplicate identifier
+LINE 8: {
+LINE 9: boolean x ;
+LINE 10: }
+LINE 11: int w
+>'w' is a duplicate identifier ;
+LINE 12: }
+LINE 13: }
+LINE 14: class Test {
+LINE 15: Point p = new Point() ;
+LINE 16: }
+

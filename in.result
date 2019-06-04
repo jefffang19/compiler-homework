@@ -1,0 +1,181 @@
+>zero divisor
+>Warning: function body in declaration is empty
+LINE 1:
+LINE 2: int b ;
+LINE 3: static int a ;
+LINE 4: float c ;
+LINE 5: boolean g ;
+LINE 6: String str ;
+LINE 7: static String ggg ;
+LINE 8: int hh = 12 ;
+LINE 9: int hhh = 12, aaa = 52 ;
+LINE 10: int ab = 23, abc = 23, abcd = 32 ;
+LINE 11: float gx = 2.3 ;
+LINE 12: int a, b, c = 10
+>'c' is a duplicate identifier
+>'b' is a duplicate identifier
+>'a' is a duplicate identifieA ;
+LINE 13: int a = 1, b, c = 2
+>'c' is a duplicate identifier
+>'b' is a duplicate identifier
+>'a' is a duplicate identiA ;
+LINE 14: float fl = 1.02e-05 ;
+LINE 15: int bvb = 10 + 2 ;
+LINE 16: float a = 1.2 + 2 + 2330
+>'a' is a duplicate identifier ;
+LINE 17: int [] a = new int[10]
+>'a' is a duplicate identifier ;
+LINE 18: int *a = new int[10]
+>'a' is a duplicate identifier ;
+LINE 19: int a[10]
+>'a' is a duplicate identifier ;
+LINE 20: int a[10] = {1,2,3}
+>'a' is a duplicate identifier ;
+LINE 21: int a[] = {1,2,3}
+>'a' is a duplicate identifier ;
+LINE 22: int a = 1 / 0
+>'a' is a duplicate identifier ;
+LINE 23: final float pi = 3.14 ;
+LINE 24: apple()
+>'apple' id did not exist ;
+LINE 25: apple(a)
+>'apple' id did not exist ;
+LINE 26: apple(a, b)
+>'apple' id did not exist ;
+LINE 27: apple(a, banana(a)
+>'banana' id did not exist)
+>'apple' id did not exist ;
+LINE 28:
+LINE 29: int apple(int b){
+LINE 30: mylove()
+>'mylove' id did not exist ;
+LINE 31: int a, b = 2
+LINE 32: float c = 3 ;
+LINE 33: }
+LINE 34: private int banana(int b, float c){
+LINE 35: int c ;
+LINE 36: }
+LINE 37: private int banana(int b = 2, float c){
+>'banana' is a duplicate identifier
+LINE 38: int c ;
+LINE 39: }
+LINE 40: int durian() ;
+LINE 41: protected int banana() ;
+>'banana' is a duplicate identifier
+LINE 42: private String elephant(){
+LINE 43: int c ;
+LINE 44: }
+LINE 45: String gg(int b){ }
+LINE 46:
+LINE 47: x = 0 ;
+>'x' id did not exist
+LINE 48: x = 1 + 1 ;
+>'x' id did not exist
+LINE 49: x
+>'x' id did not exist + 1 ;
+LINE 50: void clear(){
+LINE 51: x = 0 ;
+>'x' id did not exist
+LINE 52: y = 0 ;
+>'y' id did not exist
+LINE 53: }
+LINE 54: class Point {
+LINE 55: static int counter ;
+LINE 56: int x, y ;
+LINE 57: void clear(){
+LINE 58: x = 0 ;
+LINE 59: y = 0 ;
+LINE 60: }
+LINE 61: }
+LINE 62: Point Left = new Point() ;
+LINE 63:
+LINE 64: -b ;
+LINE 65: -2 ;
+LINE 66: 1 + 2 ;
+LINE 67:
+LINE 68: a = a + -b ;
+LINE 69: a + b ;
+LINE 70: a + -b ;
+LINE 71: (1 + 2) * 3 ;
+LINE 72: b + add(c, d
+>'d' id did not exist)
+>'add' id did not exist ;
+LINE 73: a * b * c * d
+>'d' id did not exist ;
+LINE 74: b + cat(c--, ++d)
+>'cat' id did not exist ;
+LINE 75:
+LINE 76: print(a + b) ;
+LINE 77: read(my.hand) ;>'my.hand' id did not exist
+LINE 78: my.hand = 39 ;
+>'my.hand' id did not exist
+LINE 79: ;
+LINE 80: my.hand++ ;>'my.hand' id did not exist
+LINE 81:
+LINE 82: if(a) ++a ;
+LINE 83: else --a ;
+LINE 84:
+LINE 85: if(a) {
+LINE 86: ++a ;
+LINE 87: a = a + 1 ;
+LINE 88: }
+LINE 89:
+LINE 90: if(a) ;
+LINE 91: else if(a) print(g) ;
+LINE 92: else a ;
+LINE 93:
+LINE 94:
+LINE 95: while ( a > 1 ) a++ ;
+LINE 96: for ( int a = 0
+>'a' is a duplicate identifier ; a < b ; a = a + 1 ) {
+LINE 97: print(a) ;
+LINE 98: }
+LINE 99:
+LINE 100: int sum = 0, i = 1 ;
+LINE 101: while ( i <= 10 ) {
+LINE 102: sum = sum + i ;
+LINE 103: i = i + 1 ;
+LINE 104: }
+LINE 105:
+LINE 106: a[12]
+>'a[12]' id did not exist + a[21]
+>'a[21]' id did not exist ;
+LINE 107: a[12] = 2 ;
+>'a[12]' id did not exist
+LINE 108:
+LINE 109: for ( int index = 0 ; index < 10 ; index++ ) {
+LINE 110: if(list[index]
+>'list[index]' id did not exist > max
+>'max' id did not exist) {
+LINE 111: max = list[index]
+>'list[index]' id did not exist ;
+>'max' id did not exist
+LINE 112: }
+LINE 113: }
+LINE 114:
+LINE 115: int forign(int a){
+LINE 116: print(a) ;
+LINE 117: return 0 ;
+LINE 118: }
+LINE 119:
+LINE 120: print(a + b) ;
+LINE 121: print("hello world\n" + "people\n") ;
+LINE 122:
+LINE 123: void restring(){
+LINE 124: return "hello" ;
+LINE 125: }
+LINE 126:
+LINE 127: if(!a) {
+LINE 128: print("not") ;
+LINE 129: }
+LINE 130:
+LINE 131: a[12] = 2 ;
+>'a[12]' id did not exist
+LINE 132: a[b] = 2 ;
+>'a[b]' id did not exist
+LINE 133: a[getsize(b)] = 2 ;
+>'a[getsize(b)]' id did not exist
+LINE 134: a[b]
+>'a[b]' id did not exist + a[b]
+>'a[b]' id did not exist ;
+

@@ -1,0 +1,56 @@
+>syntax error
+>syntax error
+>syntax error
+>'Point' typed do not match with newed type 'func'
+LINE 1: class test {
+LINE 2: int foo ;
+LINE 3: void bar(){
+LINE 4: foo++ ;
+LINE 5: }
+LINE 6: }
+LINE 7:
+LINE 8: ERROR HERE ;
+LINE 9:
+LINE 10: void func(int a){
+LINE 11: float a = 2
+LINE 12: return 0 ;
+LINE 13: }
+LINE 14:
+LINE 15: int func2(){
+LINE 16: int a = 2
+LINE 17: float a = 2
+>'a' is a duplicate identifier
+LINE 18: b++
+>'b' id did not exist ;
+LINE 19: --a ;
+LINE 20: func() ;
+LINE 21: fun()
+>'fun' id did not exist ;
+LINE 22: return 0 ;
+LINE 23: }
+LINE 24:
+LINE 25: class Point {
+LINE 26: int a ;
+LINE 27: }
+LINE 28:
+LINE 29: class Point {
+>'Point' is a duplicate identifier
+LINE 30: int b ;
+LINE 31: float b
+>'b' is a duplicate identifier ;
+LINE 32: }
+LINE 33:
+LINE 34: ERROR HERE ;
+LINE 35: int a = 2 ;
+LINE 36:
+LINE 37: if(ERROR HERE) {
+LINE 38: print(hello
+>'hello' id did not exist) ;
+LINE 39: }
+LINE 40:
+LINE 41: Point a = new Point()
+>'a' is a duplicate identifier ;
+LINE 42: Point a = new func()
+>'a' is a duplicate identifier ;
+LINE 43:
+

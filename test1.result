@@ -1,0 +1,14 @@
+LINE 1: class sigma {
+LINE 2: final int n = 10 ;
+LINE 3: int sum, index ;
+LINE 4: main(){
+LINE 5: index = 0 ;
+LINE 6: sum = 0 ;
+LINE 7: while ( index <= n ) {
+LINE 8: sum = sum + index ;
+LINE 9: index = index + 1 ;
+LINE 10: }
+LINE 11: print(sum) ;
+LINE 12: 
+LINE 13: }
+

@@ -1,0 +1,11 @@
+LINE 1: class Point {
+LINE 2: static int counter ;
+LINE 3: int x, y ;
+LINE 4: int x
+>'x' is a duplicate identifier ;
+LINE 5: void clear(){
+LINE 6: x = 0 ;
+LINE 7: y = 0 ;
+LINE 8: }
+LINE 9: }
+

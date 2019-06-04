@@ -1,0 +1,15 @@
+>syntax error
+>syntax error
+LINE 1: class Point {
+LINE 2: int z ;
+LINE 3: ERROR HERE
+LINE 4: ERROR HERE
+LINE 5: ERROR HERE
+LINE 6: float w ;
+LINE 7: }
+LINE 8: class Test {
+LINE 9: int d ;
+LINE 10: ERROR HERE
+LINE 11: int w, q ;
+LINE 12: }
+
