@@ -1,0 +1,27 @@
+
+void func(int a){
+	float a =2;
+	return 0;
+}
+
+int func2(){
+	int a =2;
+	float a=2;
+	return 0;
+}
+
+class Point{
+	int a;
+}
+
+class Point{
+	int b;
+	float b;
+}
+
+int a[] = 2;
+int a = 2;
+
+if(a 1){
+	print(hello);
+}

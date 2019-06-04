@@ -1,0 +1,127 @@
+
+/* this is comment */
+int b;
+static int a ;
+float c;
+boolean g;
+String str;
+static String ggg;
+int hh = 12 ;
+int hhh = 12, aaa = 52;
+int ab = 23, abc = 23, abcd = 32;
+float gx = 2.3;
+int a,b, c=10;
+int a=1,b,c=2;
+float fl = 10.2e-6;
+int bvb = 10 + 2;
+float a = 1.2 + 2.0 + 2.33e3 ;
+int[] a = new int[10];
+int * a = new int[10];
+int a[10];
+int a[10] = {1,2,3};
+int a[] = {1,2,3};
+int a = 1/0;
+final float pi = 3.14;
+apple();
+apple(a);
+apple(a,b);
+apple(a,banana(a));
+
+int apple(int b){
+	mylove();
+	int a,b=2;
+	float c=3.0;
+}
+private int banana(int b,float c){ int c; }
+private int banana(int b = 2,float c){ int c; }
+int durian();
+protected int banana();
+private String elephant(){ int c; }
+String gg(int b){}
+
+x = 0;
+x = 1 + 1;
+x + 1;
+void clear() {
+		x = 0;
+		y = 0;
+}	
+class Point {
+	static int counter ;
+	int x, y;
+	void clear() {
+		x = 0;
+		y = 0;
+	}
+}
+Point Left = new Point();
+
+-b;
+-2;
+1+2;
+
+a = a+ -b;
+a+b;
+a+-b;
+(1+2)*3;
+b+add(c,d);
+a*b*c*d;
+b+cat(c--,++d);
+
+print(a+b);
+read(my.hand);
+my.hand=39;
+;
+my.hand++;
+
+if(a) ++a;
+else --a;
+
+if(a){
+	++a;
+	a=a+1;
+}
+
+if(a);
+else if (a) print(g);
+else a;
+
+
+while(a>1) a++;
+for(int a=0;a<b;a=a+1){
+	print(a);
+}
+
+int sum = 0, i =1 ;
+while ( i <= 10) {
+    sum = sum + i ;
+	i = i + 1 ;
+}
+
+a[12] + a[21];
+a[12] = 2;
+
+for (int index = 0; index < 10; index++) {
+    if (list[index] > max) {
+        max = list[index];
+    }
+}
+
+int forign(int a){
+	print(a);
+	return 0;
+}
+
+print(a+b);
+print("hello world\n" + "people\n" );
+
+void restring(){
+	return "hello";
+}
+
+if(!a){ print("not"); }
+
+a[12]=2;
+a[b]=2;
+a[getsize(b)]=2;
+a[b]+a[b];
