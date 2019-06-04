@@ -1,4 +1,13 @@
 /* comment */
+class test{
+	int foo;
+	void bar(){
+		foo++;
+	}
+}
+
+int --a;
+
 void func(int a){
 	float a =2;
 	return 0;
@@ -7,6 +16,10 @@ void func(int a){
 int func2(){
 	int a =2;
 	float a=2;
+	b ++;
+	--a;
+	func();
+	fun();
 	return 0;
 }
 
@@ -25,3 +38,7 @@ int a = 2;
 if(a 1){
 	print(hello);
 }
+
+Point a = new Point();
+Point a = new func();
+

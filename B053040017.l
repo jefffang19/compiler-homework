@@ -26,7 +26,7 @@ space [ \t]
 string \"(\\.|[^\n"\\])*\"
 ID [^.,:;\(\)\[\]\{\}+\-*/%=<>! \t\r\n]+
 %%
-{comment}		{ printf("%s\n",yytext); return(COMMENT);}
+{comment}		{ /*printf("%s\n",yytext);*/}
 {symbol}		{
 	/*print_lineno();*/
 	charcnt+=yyleng;

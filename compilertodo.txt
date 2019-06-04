@@ -60,19 +60,18 @@ NOT ->!a;
 compound statement 內宣告的 variables 和 constants 有區域性
 duplicate def
 
+
+--------------------
 error recovery
 
 format 
+
+when use id, check if exsist
 
 ------------------------------------------------------------------------
 to be done:
 
 int func( "the scope of paras here" )
-
-when use id, check if exsist
-
-
-
 
 ---------------------------------------------------------
 don't want to do

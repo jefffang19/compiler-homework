@@ -43,9 +43,9 @@ void func_name(char in[], char out[]);
 	int i;
 }
 /* keywords */
-%token BOOLEAN BREAK BYTE CASE CHAR CATCH CLASS CONST CONTINUE DEFAULT DO DOUBLE ELSE EXTENDS FALSE2 FINAL FINALLY FLOAT FOR IF IMPLEMENTS INT LONG MAIN NEW PRINT PRIVATE PROTECTED PUBLIC RETURN SHORT STATIC STRING SWITCH THIS TRUE2 TRY VOID WHILE READ COMMENT
+%token BOOLEAN BREAK BYTE CASE CHAR CATCH CLASS CONST CONTINUE DEFAULT DO DOUBLE ELSE EXTENDS FALSE2 FINAL FINALLY FLOAT FOR IF IMPLEMENTS INT LONG MAIN NEW PRINT PRIVATE PROTECTED PUBLIC RETURN SHORT STATIC STRING SWITCH THIS TRUE2 TRY VOID WHILE READ
 %token INTEGER REAL ID PPLUS MMINUS SEQUAL BEQUAL EQUAL NEQUAL AND OR EMPTYLINE
-%type<s> BOOLEAN BREAK BYTE CASE CHAR CATCH CLASS CONST CONTINUE DEFAULT DO DOUBLE ELSE EXTENDS FALSE2 FINAL FINALLY FLOAT FOR IF IMPLEMENTS INT LONG MAIN NEW PRINT PRIVATE PROTECTED PUBLIC RETURN SHORT STATIC STRING SWITCH THIS TRUE2 TRY VOID WHILE ID type identifier_list assign expr arrinit arrinit_expr method_modifier method_declr compound function func_parem declaration method_declr_parem class_declr class_body simple PPLUS MMINUS SEQUAL BEQUAL EQUAL NEQUAL AND OR prefixOp postfixOp const_expr term factor name READ boolean_expr conditional infixop forinitop forupdate for_parem loop func_return new_obj
+%type<s> BOOLEAN BREAK BYTE CASE CHAR CATCH CLASS CONST CONTINUE DEFAULT DO DOUBLE ELSE EXTENDS FALSE2 FINAL FINALLY FLOAT FOR IF IMPLEMENTS INT LONG MAIN NEW PRINT PRIVATE PROTECTED PUBLIC RETURN SHORT STATIC STRING SWITCH THIS TRUE2 TRY VOID WHILE ID type identifier_list assign expr arrinit arrinit_expr method_modifier method_declr compound function func_parem declaration method_declr_parem class_declr class_body simple PPLUS MMINUS SEQUAL BEQUAL EQUAL NEQUAL AND OR prefixOp postfixOp const_expr term factor name READ boolean_expr conditional infixop forinitop forupdate for_parem loop func_return new_obj main_func
 %type<i> INTEGER
 %type<d> REAL
 %type<c> leftcurly rightcurly
@@ -53,13 +53,12 @@ void func_name(char in[], char out[]);
 readin		: readin declaration ';'{ print_lineno($2,1); /*printf("%s ;\n",$2);*/ }
 			| readin method_declr { print_lineno($2,0); /*printf("%s\n",$2);*/ }
 			| readin class_declr { print_lineno($2,0); /*printf("%s\n",$2);*/ }
-			| readin new_obj ';' { print_lineno($2,1); /*printf("%s ;\n",$2);*/ }
 			| readin simple { print_lineno($2,0); /*printf("%s\n",$2);*/ }
 			| readin conditional { print_lineno($2,0); /*printf("%s\n",$2);*/ }
 			| readin boolean_expr ';' { print_lineno($2,1); /*printf("%s ;\n",$2);*/ }
 			| readin loop { print_lineno($2,0); /*printf("%s\n",$2);*/ }
 			| readin EMPTYLINE { printf("LINE %d:\n",lineno++);}
-			| readin COMMENT { ++lineno; }
+			| readin main_func { print_lineno($2,0); }
 			| { /*empty*/ }
 ;
 declaration	: type identifier_list {
@@ -74,6 +73,7 @@ declaration	: type identifier_list {
 				$$ = (char*)malloc(sizeof(char)*3*returnDollarLEN);	
 				sprintf($$,"final %s %s",$2,$3);
 			}
+			| new_obj { $$ = $1; }
 ;
 class_declr	: CLASS ID leftcurly class_body rightcurly {
 				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);	
@@ -102,6 +102,9 @@ class_body	: declaration ';' {
 			| method_declr {
 				$$ = $1;
 			}
+			| main_func {
+				$$ = $1;
+			}
 			| declaration ';' class_body {
 				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);	
 				sprintf($$,"%s ;\n%s",$1,$3);
@@ -110,6 +113,25 @@ class_body	: declaration ';' {
 				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);	
 				sprintf($$,"%s\n%s",$1,$2);
 			}
+			| main_func class_body {
+				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);	
+				sprintf($$,"%s\n%s",$1,$2);
+			}
+			| leftcurly compound rightcurly {
+				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);	
+				sprintf($$,"{\n%s\n}",$2);
+			}
+			| leftcurly compound rightcurly class_body {
+				$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);	
+				sprintf($$,"{\n%s\n}\n%s",$2,$4);
+			}
+			| error { /* error recovery */ $$ = "ERROR HERE"; }
+			| error class_body {
+					/* error recovery */ 
+					$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
+					sprintf($$,"ERROR HERE\n%s",$2);
+			}
+
 ;
 method_declr: type ID '(' method_declr_parem ')' leftcurly compound rightcurly { /*function*/
 				/* ps compound is things inside function(){ HERE } */
@@ -695,6 +717,20 @@ compound		: declaration ';' {
 					$$ = (char*)malloc(sizeof(char)*5*returnDollarLEN);
 					sprintf($$,"%s\n%s",$1,$2);
 				}
+				| leftcurly compound rightcurly {
+					$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);	
+					sprintf($$,"{\n%s\n}",$2);
+				}
+				| leftcurly compound rightcurly compound {
+					$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);	
+					sprintf($$,"{\n%s\n}\n%s",$2,$4);
+				}
+				| error { /* error recovery */ $$ = "ERROR HERE"; }
+				| error compound {
+					/* error recovery */ 
+					$$ = (char*)malloc(sizeof(char)*5*returnDollarLEN);
+					sprintf($$,"ERROR HERE\n%s",$2);
+				}
 ;
 function		: name '(' ')' {
 					$$ = (char*)malloc(sizeof(char)*returnDollarLEN);
@@ -704,7 +740,8 @@ function		: name '(' ')' {
 					$$ = (char*)malloc(sizeof(char)*2*returnDollarLEN);
 					sprintf($$,"%s(%s)",$1,$3);
 				}
-				| MAIN '(' ')' leftcurly compound rightcurly {
+;
+main_func		: MAIN '(' ')' leftcurly compound rightcurly {
 					$$ = (char*)malloc(sizeof(char)*15*returnDollarLEN);
 					sprintf($$,"main(){\n%s\n",$5);
 				}

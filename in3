@@ -1,0 +1,11 @@
+main()
+  {
+    index = 0;
+    sum = 0;
+    while (index <= n) 
+    {
+      sum = sum + index;
+      index = index + 1;
+    } 
+    print(sum);
+  }  
